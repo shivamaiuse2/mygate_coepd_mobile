@@ -72,13 +72,14 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Announcements'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () => Navigator.of(context).pop(),
+        // ),
       ),
       body: Column(
         children: [
+          const SizedBox(height: 16),
           // Category Filter
           SizedBox(
             height: 50,

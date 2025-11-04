@@ -102,10 +102,10 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Service Requests'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () => Navigator.of(context).pop(),
+        // ),
       ),
       body: Column(
         children: [
@@ -186,7 +186,7 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> {
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: _getServiceColor(request['category'])
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
@@ -298,7 +298,7 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> {
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: _getServiceColor(request['category'])
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(

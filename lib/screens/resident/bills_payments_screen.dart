@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class BillsPaymentsScreen extends StatefulWidget {
   const BillsPaymentsScreen({super.key});
@@ -89,10 +88,10 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bills & Payments'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () => Navigator.of(context).pop(),
+        // ),
       ),
       body: Column(
         children: [
@@ -273,8 +272,8 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: bill['status'] == 'Due'
-                                  ? Colors.red.withOpacity(0.1)
-                                  : Colors.orange.withOpacity(0.1),
+                                  ? Colors.red.withValues(alpha: 0.1)
+                                  : Colors.orange.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -381,7 +380,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                         vertical: 5,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.1),
+                        color: Colors.green.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Text(
@@ -470,7 +469,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: method['color'].withOpacity(0.1),
+                              color: method['color'].withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(

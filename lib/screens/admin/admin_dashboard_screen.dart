@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
-import 'package:mygate_coepd/models/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
@@ -104,38 +104,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   ];
 
   final List<Map<String, dynamic>> _quickAccess = [
-    {
-      'icon': Icons.people,
-      'label': 'Residents',
-    },
-    {
-      'icon': Icons.description,
-      'label': 'Reports',
-    },
-    {
-      'icon': Icons.notifications,
-      'label': 'Notices',
-    },
-    {
-      'icon': Icons.home,
-      'label': 'Society',
-    },
-    {
-      'icon': Icons.calendar_today,
-      'label': 'Events',
-    },
-    {
-      'icon': Icons.credit_card,
-      'label': 'Payments',
-    },
-    {
-      'icon': Icons.bar_chart,
-      'label': 'Analytics',
-    },
-    {
-      'icon': Icons.checklist,
-      'label': 'Tasks',
-    },
+    {'icon': Icons.people, 'label': 'Residents'},
+    {'icon': Icons.description, 'label': 'Reports'},
+    {'icon': Icons.notifications, 'label': 'Notices'},
+    {'icon': Icons.home, 'label': 'Society'},
+    {'icon': Icons.calendar_today, 'label': 'Events'},
+    {'icon': Icons.credit_card, 'label': 'Payments'},
+    {'icon': Icons.bar_chart, 'label': 'Analytics'},
+    {'icon': Icons.checklist, 'label': 'Tasks'},
   ];
 
   @override
@@ -169,10 +145,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is Authenticated) {
+          // ignore: unused_local_variable
           final user = state.user;
           return Scaffold(
             appBar: AppBar(
               title: const Text('Admin Dashboard'),
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
+              elevation: 0,
               actions: [
                 IconButton(
                   onPressed: () {
@@ -190,6 +170,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
               bottom: TabBar(
                 controller: _tabController,
                 isScrollable: true,
+                indicatorColor: Colors.white,
+                indicatorWeight: 3,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white70,
                 tabs: const [
                   Tab(text: 'Overview'),
                   Tab(text: 'Residents'),
@@ -215,10 +199,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                           physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 15,
-                            mainAxisSpacing: 15,
-                          ),
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 15,
+                                mainAxisSpacing: 15,
+                              ),
                           itemCount: _stats.length,
                           itemBuilder: (context, index) {
                             final stat = _stats[index];
@@ -230,33 +214,38 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                 padding: const EdgeInsets.all(15),
                                 child: Column(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.all(10),
+                                          padding: EdgeInsets.all(10.r),
                                           decoration: BoxDecoration(
-                                            color: stat['color'].withOpacity(0.1),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                                            color: stat['color'].withOpacity(
+                                              0.1,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              12.r,
+                                            ),
                                           ),
                                           child: Icon(
                                             stat['icon'],
                                             color: stat['color'],
                                           ),
                                         ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          stat['title'],
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 12,
-                                          ),
-                                        ),
+                                        SizedBox(width: 10.w),
                                       ],
                                     ),
-                                    const SizedBox(height: 10),
+                                    SizedBox(height: 10.h),
+                                    Text(
+                                      stat['title'],
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -285,6 +274,72 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                               ),
                             );
                           },
+                        ),
+                      ),
+                      // Quick Access
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Quick Access',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 4,
+                                    crossAxisSpacing: 15,
+                                    mainAxisSpacing: 15,
+                                    childAspectRatio: 0.85,
+                                  ),
+                              itemCount: _quickAccess.length,
+                              itemBuilder: (context, index) {
+                                final item = _quickAccess[index];
+                                return Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(15),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(
+                                          context,
+                                        ).cardTheme.color,
+                                        borderRadius: BorderRadius.circular(16),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.1),
+                                            blurRadius: 5,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Icon(
+                                        item['icon'],
+                                        color: Theme.of(context).primaryColor,
+                                        size: 28,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      item['label'],
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
                       // Pending Approvals
@@ -336,9 +391,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
+                                    elevation: 2,
                                     child: Padding(
                                       padding: const EdgeInsets.all(15),
                                       child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             children: [
@@ -346,7 +404,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                                 radius: 25,
                                                 backgroundImage:
                                                     CachedNetworkImageProvider(
-                                                        approval['image']),
+                                                      approval['image'],
+                                                    ),
+                                                backgroundColor: Theme.of(
+                                                  context,
+                                                ).primaryColor.withOpacity(0.1),
                                               ),
                                               const SizedBox(width: 15),
                                               Expanded(
@@ -384,12 +446,28 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                           ),
                                           const SizedBox(height: 15),
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Expanded(
                                                 child: OutlinedButton(
                                                   onPressed: () {
-                                                    _handleReject(approval['id']);
+                                                    _handleReject(
+                                                      approval['id'],
+                                                    );
                                                   },
+                                                  style: OutlinedButton.styleFrom(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          vertical: 12,
+                                                        ),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                  ),
                                                   child: const Text('Reject'),
                                                 ),
                                               ),
@@ -397,8 +475,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                               Expanded(
                                                 child: ElevatedButton(
                                                   onPressed: () {
-                                                    _handleApprove(approval['id']);
+                                                    _handleApprove(
+                                                      approval['id'],
+                                                    );
                                                   },
+                                                  style: ElevatedButton.styleFrom(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          vertical: 12,
+                                                        ),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                  ),
                                                   child: const Text('Approve'),
                                                 ),
                                               ),
@@ -415,6 +507,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
+                                elevation: 2,
                                 child: Padding(
                                   padding: const EdgeInsets.all(20),
                                   child: Column(
@@ -429,6 +522,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                         'No pending approvals',
                                         style: TextStyle(
                                           color: Colors.grey,
+                                          fontSize: 16,
                                         ),
                                       ),
                                     ],
@@ -468,6 +562,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
+                              elevation: 2,
                               child: Column(
                                 children: _recentActivity
                                     .map(
@@ -477,15 +572,21 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                           decoration: BoxDecoration(
                                             color: activity['iconBg']
                                                 .withOpacity(0.1),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
                                           ),
                                           child: Icon(
                                             activity['icon'],
                                             color: activity['iconColor'],
                                           ),
                                         ),
-                                        title: Text(activity['title']),
+                                        title: Text(
+                                          activity['title'],
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                         subtitle: Text(activity['description']),
                                         trailing: Text(
                                           activity['time'],
@@ -494,74 +595,15 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                             fontSize: 12,
                                           ),
                                         ),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 8,
+                                            ),
                                       ),
                                     )
                                     .toList(),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      // Quick Access
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Quick Access',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 15,
-                              ),
-                              itemCount: _quickAccess.length,
-                              itemBuilder: (context, index) {
-                                final item = _quickAccess[index];
-                                return Column(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(15),
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .cardTheme
-                                            .color,
-                                        borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.1),
-                                            blurRadius: 5,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Icon(
-                                        item['icon'],
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      item['label'],
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
                             ),
                           ],
                         ),
@@ -585,36 +627,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
               backgroundColor: Theme.of(context).primaryColor,
               child: const Icon(Icons.add),
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _currentIndex,
-              onTap: _onTabTapped,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people),
-                  label: 'Residents',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.description),
-                  label: 'Reports',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-              ],
-            ),
           );
         }
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       },
     );
   }

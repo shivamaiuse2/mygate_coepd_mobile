@@ -149,7 +149,7 @@ class _ResidentMainScreenState extends State<ResidentMainScreen> with TickerProv
         color: theme.bottomNavigationBarTheme.backgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 20,
             offset: const Offset(0, -5),
             spreadRadius: 0,
@@ -227,8 +227,8 @@ class _BuildAnimatedNavItem extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        splashColor: primaryColor.withOpacity(0.1),
-        highlightColor: primaryColor.withOpacity(0.05),
+        splashColor: primaryColor.withValues(alpha: 0.1),
+        highlightColor: primaryColor.withValues(alpha: 0.05),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Column(
@@ -250,8 +250,8 @@ class _BuildAnimatedNavItem extends StatelessWidget {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              primaryColor.withOpacity(0.15),
-                              primaryColor.withOpacity(0.05),
+                              primaryColor.withValues(alpha: 0.15),
+                              primaryColor.withValues(alpha: 0.05),
                             ],
                           ),
                           borderRadius: BorderRadius.circular(12),

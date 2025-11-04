@@ -110,16 +110,16 @@ class _VisitorManagementScreenState extends State<VisitorManagementScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Visitor Management'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {},
-          ),
-        ],
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () => Navigator.of(context).pop(),
+        // ),
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.notifications),
+        //     onPressed: () {},
+        //   ),
+        // ],
       ),
       body: Column(
         children: [
@@ -160,31 +160,36 @@ class _VisitorManagementScreenState extends State<VisitorManagementScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(
-                  onPressed: () => setState(() => _visitorView = 'upcoming'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _visitorView == 'upcoming'
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).cardTheme.color,
-                    foregroundColor: _visitorView == 'upcoming'
-                        ? Colors.white
-                        : Theme.of(context).textTheme.bodyLarge?.color,
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => setState(() => _visitorView = 'upcoming'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _visitorView == 'upcoming'
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).cardTheme.color,
+                      foregroundColor: _visitorView == 'upcoming'
+                          ? Colors.white
+                          : Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
+                    child: const Text('Upcoming'),
                   ),
-                  child: const Text('Upcoming'),
                 ),
                 const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () => setState(() => _visitorView = 'history'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _visitorView == 'history'
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).cardTheme.color,
-                    foregroundColor: _visitorView == 'history'
-                        ? Colors.white
-                        : Theme.of(context).textTheme.bodyLarge?.color,
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => setState(() => _visitorView = 'history'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _visitorView == 'history'
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).cardTheme.color,
+                      foregroundColor: _visitorView == 'history'
+                          ? Colors.white
+                          : Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
+                    child: const Text('History'),
                   ),
-                  child: const Text('History'),
                 ),
               ],
             ),

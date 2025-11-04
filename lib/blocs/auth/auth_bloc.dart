@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mygate_coepd/models/user.dart';
 import 'package:mygate_coepd/repositories/user_repository.dart';
 import 'package:mygate_coepd/config/app_config.dart';
 import 'package:mygate_coepd/blocs/auth/auth_event.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mygate_coepd/config/app_config.dart';
 import 'package:mygate_coepd/theme/app_theme.dart';
@@ -37,36 +38,44 @@ void main() async {
 
 class CommunityLinkApp extends StatelessWidget {
   const CommunityLinkApp({super.key});
+  
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => UserRepository(),
-      child: BlocProvider(
-        create: (context) => AuthBloc(userRepository: context.read<UserRepository>()),
-        child: MaterialApp(
-          title: 'CommunityLink',
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.system,
-          initialRoute: '/',
-          routes: {
-            '/': (context) => const SplashScreen(),
-            '/onboarding': (context) => const OnboardingScreen(),
-            '/role-selection': (context) => const RoleSelectionScreen(),
-            '/auth': (context) => const AuthScreen(),
-            '/resident-main': (context) => const ResidentMainScreen(),
-            '/guard-main': (context) => const GuardMainScreen(),
-            '/admin-main': (context) => const AdminMainScreen(),
-            '/visitors': (context) => const VisitorManagementScreen(),
-            '/announcements': (context) => const AnnouncementsScreen(),
-            '/services': (context) => const ServiceRequestsScreen(),
-            '/bills': (context) => const BillsPaymentsScreen(),
-            '/amenities': (context) => const AmenityBookingScreen(),
-            '/community': (context) => const CommunityScreen(),
-            '/profile': (context) => const ProfileScreen(),
-          },
-          debugShowCheckedModeBanner: false,
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    return ScreenUtilInit(
+      // designSize: ,
+      minTextAdapt: true,
+      splitScreenMode: true,
+      child: RepositoryProvider(
+        create: (context) => UserRepository(),
+        child: BlocProvider(
+          create: (context) => AuthBloc(userRepository: context.read<UserRepository>()),
+          child: MaterialApp(
+            title: 'CommunityLink',
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: ThemeMode.system,
+            initialRoute: '/',
+            routes: {
+              '/': (context) => const SplashScreen(),
+              '/onboarding': (context) => const OnboardingScreen(),
+              '/role-selection': (context) => const RoleSelectionScreen(),
+              '/auth': (context) => const AuthScreen(),
+              '/resident-main': (context) => const ResidentMainScreen(),
+              '/guard-main': (context) => const GuardMainScreen(),
+              '/admin-main': (context) => const AdminMainScreen(),
+              '/visitors': (context) => const VisitorManagementScreen(),
+              '/announcements': (context) => const AnnouncementsScreen(),
+              '/services': (context) => const ServiceRequestsScreen(),
+              '/bills': (context) => const BillsPaymentsScreen(),
+              '/amenities': (context) => const AmenityBookingScreen(),
+              '/community': (context) => const CommunityScreen(),
+              '/profile': (context) => const ProfileScreen(),
+            },
+            debugShowCheckedModeBanner: false,
+          ),
         ),
       ),
     );

@@ -4,8 +4,6 @@ import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_event.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
 import 'package:mygate_coepd/config/app_config.dart';
-import 'package:mygate_coepd/screens/onboarding_screen.dart';
-import 'package:mygate_coepd/screens/auth_screen.dart';
 import 'package:mygate_coepd/screens/resident/resident_main_screen.dart';
 import 'package:mygate_coepd/screens/guard/guard_main_screen.dart';
 import 'package:mygate_coepd/screens/admin/admin_main_screen.dart';
@@ -102,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   height: 300,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                   ),
                 ),
               ),
@@ -114,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   height: 400,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                   ),
                 ),
               ),
@@ -126,7 +124,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   height: 50,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                   ),
                 ),
               ),
@@ -138,7 +136,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   height: 40,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                   ),
                 ),
               ),
@@ -155,7 +153,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         height: 120,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                         ),
                         child: Center(
                           child: Container(

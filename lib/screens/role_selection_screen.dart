@@ -43,7 +43,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                 height: 350,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                 ),
               ),
             ),
@@ -55,7 +55,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                 height: 450,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                 ),
               ),
             ),
@@ -67,7 +67,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                 height: 60,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
                 ),
               ),
             ),
@@ -79,7 +79,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                 height: 45,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
                 ),
               ),
             ),
@@ -93,7 +93,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                   height: 100,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                   ),
                   child: Center(
                     child: Container(
@@ -222,10 +222,10 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
     final backgroundColor = isDarkMode ? const Color(0xFF2D2D2D) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
     final secondaryTextColor = isDarkMode ? Colors.white70 : Colors.grey;
-    final borderColor = isDarkMode ? Colors.grey.withOpacity(0.3) : Colors.grey.withOpacity(0.2);
+    final borderColor = isDarkMode ? Colors.grey.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.2);
     final boxShadow = isDarkMode
-        ? [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 5))]
-        : [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 15, offset: const Offset(0, 5))];
+        ? [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 5))]
+        : [BoxShadow(color: Colors.grey.withValues(alpha: 0.1), blurRadius: 15, offset: const Offset(0, 5))];
 
     return GestureDetector(
       onTap: () {
@@ -249,7 +249,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
             Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Icon(

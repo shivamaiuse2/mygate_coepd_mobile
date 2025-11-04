@@ -1,8 +1,20 @@
+// ignore_for_file: unused_element, unused_local_variable, unused_field
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
-import 'package:mygate_coepd/models/user.dart';
+import 'package:mygate_coepd/theme/app_theme.dart';
+import 'package:mygate_coepd/screens/guard/details/group_visitor_entry_screen.dart';
+import 'package:mygate_coepd/screens/guard/details/vendor_access_screen.dart';
+import 'package:mygate_coepd/screens/guard/details/utility_vehicle_tracking_screen.dart';
+import 'package:mygate_coepd/screens/guard/details/guard_patrolling_screen.dart';
+import 'package:mygate_coepd/screens/guard/details/guard_calling_screen.dart';
+import 'package:mygate_coepd/screens/guard/details/temperature_mask_screen.dart';
+import 'package:mygate_coepd/screens/voice_command_entry_screen.dart';
+import 'package:mygate_coepd/screens/guard/details/e_intercom_screen.dart';
+import 'package:mygate_coepd/screens/guard/details/offline_mode_screen.dart';
+import 'package:mygate_coepd/screens/guard/details/multilingual_support_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class GuardDashboardScreen extends StatefulWidget {
@@ -42,31 +54,67 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
       'icon': Icons.person_add,
       'label': 'Visitor Entry',
       'color': Colors.blue,
+      'screen': 'visitor_entry',
+    },
+    {
+      'icon': Icons.group,
+      'label': 'Group Entry',
+      'color': Colors.purple,
+      'screen': 'group_entry',
+    },
+    {
+      'icon': Icons.build,
+      'label': 'Vendor Access',
+      'color': Colors.green,
+      'screen': 'vendor_access',
     },
     {
       'icon': Icons.directions_car,
       'label': 'Vehicle Log',
-      'color': Colors.green,
+      'color': Colors.orange,
+      'screen': 'vehicle_log',
     },
     {
-      'icon': Icons.notifications,
-      'label': 'Alert',
-      'color': Colors.red,
+      'icon': Icons.directions_walk,
+      'label': 'Patrolling',
+      'color': Colors.indigo,
+      'screen': 'patrolling',
     },
     {
       'icon': Icons.phone,
-      'label': 'Call',
-      'color': Colors.purple,
+      'label': 'Call Guard',
+      'color': Colors.red,
+      'screen': 'call_guard',
     },
     {
-      'icon': Icons.checklist,
-      'label': 'Attendance',
-      'color': Colors.orange,
-    },
-    {
-      'icon': Icons.inventory,
-      'label': 'Delivery',
+      'icon': Icons.thermostat,
+      'label': 'Temp Check',
       'color': Colors.teal,
+      'screen': 'temp_check',
+    },
+    {
+      'icon': Icons.keyboard_voice,
+      'label': 'Voice Entry',
+      'color': Colors.pink,
+      'screen': 'voice_entry',
+    },
+    {
+      'icon': Icons.voicemail,
+      'label': 'E-Intercom',
+      'color': Colors.cyan,
+      'screen': 'e_intercom',
+    },
+    {
+      'icon': Icons.wifi_off,
+      'label': 'Offline Mode',
+      'color': Colors.brown,
+      'screen': 'offline_mode',
+    },
+    {
+      'icon': Icons.language,
+      'label': 'Language',
+      'color': Colors.lime,
+      'screen': 'language',
     },
   ];
 
@@ -115,6 +163,99 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
     });
   }
 
+  void _navigateToScreen(String screen) {
+    switch (screen) {
+      case 'group_entry':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const GroupVisitorEntryScreen(),
+          ),
+        );
+        break;
+      case 'vendor_access':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const VendorAccessScreen(),
+          ),
+        );
+        break;
+      case 'vehicle_log':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const UtilityVehicleTrackingScreen(),
+          ),
+        );
+        break;
+      case 'patrolling':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const GuardPatrollingScreen(),
+          ),
+        );
+        break;
+      case 'call_guard':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const GuardCallingScreen(),
+          ),
+        );
+        break;
+      case 'temp_check':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const TemperatureMaskScreen(),
+          ),
+        );
+        break;
+      case 'voice_entry':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const VoiceCommandEntryScreen(),
+          ),
+        );
+        break;
+      case 'e_intercom':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const EIntercomScreen(),
+          ),
+        );
+        break;
+      case 'offline_mode':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const OfflineModeScreen(),
+          ),
+        );
+        break;
+      case 'language':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MultilingualSupportScreen(),
+          ),
+        );
+        break;
+      default:
+        // For visitor entry and other simple actions
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Action not implemented yet'),
+            backgroundColor: AppTheme.primary,
+          ),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
@@ -142,98 +283,89 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
             body: Stack(
               children: [
                 SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // Offline Banner
-                      if (_isOffline)
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          color: Colors.amber,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Row(
-                                children: [
-                                  Icon(Icons.wifi_off, color: Colors.white),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    'Offline Mode',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isOffline = false;
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      // Welcome Card
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        // Offline Banner
+                        if (_isOffline)
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            color: Colors.amber,
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: user.profileImage != null
-                                      ? CachedNetworkImageProvider(
-                                          user.profileImage!)
-                                      : null,
-                                  child: user.profileImage == null
-                                      ? Icon(
-                                          Icons.person,
-                                          color: Theme.of(context).primaryColor,
-                                        )
-                                      : null,
-                                ),
-                                const SizedBox(width: 15),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                const Row(
                                   children: [
+                                    Icon(Icons.wifi_off, color: Colors.white),
+                                    SizedBox(width: 10),
                                     Text(
-                                      'Welcome, ${user.name.split(' ')[0]}',
-                                      style: const TextStyle(
-                                        fontSize: 18,
+                                      'Offline Mode',
+                                      style: TextStyle(
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      '${DateTime.now().weekday}, ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}',
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
                                   ],
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isOffline = false;
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        // Search Bar at top
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          elevation: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.search, color: Colors.grey),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: TextField(
+                                    decoration: const InputDecoration(
+                                      hintText:
+                                          'Search visitors, vehicles or flats...',
+                                      border: InputBorder.none,
+                                    ),
+                                    onSubmitted: (value) {
+                                      // Handle search
+                                    },
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                      ),
-                      // Quick Actions
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
+                        // Quick Actions
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const SizedBox(height: 15),
                             const Text(
                               'Quick Actions',
                               style: TextStyle(
@@ -247,7 +379,7 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
                               physics: const NeverScrollableScrollPhysics(),
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
+                                crossAxisCount: 4,
                                 crossAxisSpacing: 15,
                                 mainAxisSpacing: 15,
                               ),
@@ -256,24 +388,27 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
                                 final action = _quickActions[index];
                                 return Column(
                                   children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(20),
-                                      decoration: BoxDecoration(
-                                        color: action['color'],
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: action['color']
-                                                .withOpacity(0.3),
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 5),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Icon(
-                                        action['icon'],
-                                        color: Colors.white,
-                                        size: 30,
+                                    GestureDetector(
+                                      onTap: () => _navigateToScreen(action['screen']),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(15),
+                                        decoration: BoxDecoration(
+                                          color: action['color'],
+                                          borderRadius: BorderRadius.circular(16),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: action['color']
+                                                  .withValues(alpha: 0.3),
+                                              blurRadius: 10,
+                                              offset: const Offset(0, 5),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Icon(
+                                          action['icon'],
+                                          color: Colors.white,
+                                          size: 24,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 8),
@@ -281,7 +416,7 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
                                       action['label'],
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 10,
                                       ),
                                     ),
                                   ],
@@ -290,12 +425,9 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
                             ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      // Pending Approvals
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
+                        const SizedBox(height: 20),
+                        // Pending Approvals
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
@@ -442,12 +574,9 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
                               ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      // Recent Activity
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
+                        const SizedBox(height: 10),
+                        // Recent Activity
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
@@ -468,7 +597,7 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 15),
+                            const SizedBox(height: 10),
                             Card(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
@@ -481,7 +610,7 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
                                           padding: const EdgeInsets.all(10),
                                           decoration: BoxDecoration(
                                             color: activity['iconBg']
-                                                .withOpacity(0.1),
+                                                .withValues(alpha: 0.1),
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                           ),
@@ -506,80 +635,14 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
                             ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 80), // Space for bottom bar
-                    ],
-                  ),
-                ),
-                // Search Bar at bottom
-                Positioned(
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    elevation: 5,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.search, color: Colors.grey),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: TextField(
-                              decoration: const InputDecoration(
-                                hintText:
-                                    'Search visitors, vehicles or flats...',
-                                border: InputBorder.none,
-                              ),
-                              onSubmitted: (value) {
-                                // Handle search
-                              },
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                        const SizedBox(height: 20), // Reduced space
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _currentIndex,
-              onTap: _onTabTapped,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people),
-                  label: 'Visitors',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.checklist),
-                  label: 'Attendance',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-              ],
-            ),
+            // Removed bottomNavigationBar from here since it's handled in GuardMainScreen
           );
         }
         return const Scaffold(

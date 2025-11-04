@@ -20,7 +20,16 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
       'image':
           'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&q=80&w=400&h=300',
       'description': 'Olympic size swimming pool with lifeguard',
-      'availableSlots': ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'],
+      'availableSlots': [
+        '06:00',
+        '08:00',
+        '10:00',
+        '12:00',
+        '14:00',
+        '16:00',
+        '18:00',
+        '20:00',
+      ],
     },
     {
       'id': 2,
@@ -28,7 +37,16 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
       'image':
           'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=400&h=300',
       'description': 'Fully equipped fitness center',
-      'availableSlots': ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'],
+      'availableSlots': [
+        '06:00',
+        '08:00',
+        '10:00',
+        '12:00',
+        '14:00',
+        '16:00',
+        '18:00',
+        '20:00',
+      ],
     },
     {
       'id': 3,
@@ -36,7 +54,16 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
       'image':
           'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&q=80&w=400&h=300',
       'description': 'Professional tennis court with lights',
-      'availableSlots': ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'],
+      'availableSlots': [
+        '06:00',
+        '08:00',
+        '10:00',
+        '12:00',
+        '14:00',
+        '16:00',
+        '18:00',
+        '20:00',
+      ],
     },
     {
       'id': 4,
@@ -53,27 +80,24 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Amenity Booking'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () => Navigator.of(context).pop(),
+        // ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Amenity Selection
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Amenity Selection
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
                     'Select Amenity',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   SizedBox(
@@ -113,7 +137,7 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
                                         end: Alignment.bottomCenter,
                                         colors: [
                                           Colors.transparent,
-                                          Colors.black.withOpacity(0.7),
+                                          Colors.black.withValues(alpha: 0.7),
                                         ],
                                       ),
                                     ),
@@ -141,50 +165,47 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
                   ),
                 ],
               ),
-            ),
-            // Amenity Details
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
+
+              const SizedBox(height: 16),
+
+              // Amenity Details
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardTheme.color,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _amenities[_selectedAmenity]['name'],
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _amenities[_selectedAmenity]['name'],
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _amenities[_selectedAmenity]['description'],
-                        style: const TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _amenities[_selectedAmenity]['description'],
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            // Date Selection
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+
+              const SizedBox(height: 16),
+
+              // Date Selection
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
                     'Select Date',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -201,7 +222,8 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
                         final formattedDate =
                             '${date.day}/${date.month}/${date.year}';
                         final isSelected =
-                            _selectedDate == '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+                            _selectedDate ==
+                            '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
                         return GestureDetector(
                           onTap: () => setState(() {
                             _selectedDate =
@@ -210,7 +232,9 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
                           child: Container(
                             margin: const EdgeInsets.only(right: 10),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? Theme.of(context).primaryColor
@@ -219,7 +243,7 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
                               border: Border.all(
                                 color: isSelected
                                     ? Theme.of(context).primaryColor
-                                    : Colors.grey.withOpacity(0.3),
+                                    : Colors.grey.withValues(alpha: 0.3),
                               ),
                             ),
                             child: Column(
@@ -230,10 +254,9 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
                                   style: TextStyle(
                                     color: isSelected
                                         ? Colors.white
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge
-                                            ?.color,
+                                        : Theme.of(
+                                            context,
+                                          ).textTheme.bodyLarge?.color,
                                     fontWeight: isSelected
                                         ? FontWeight.bold
                                         : FontWeight.normal,
@@ -248,19 +271,16 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
                   ),
                 ],
               ),
-            ),
-            // Time Selection
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
+
+              const SizedBox(height: 16),
+
+              // Time Selection
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
                     'Select Time Slot',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   Wrap(
@@ -268,48 +288,48 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
                     runSpacing: 10,
                     children: _amenities[_selectedAmenity]['availableSlots']
                         .map<Widget>((slot) {
-                      final isSelected = _selectedTime == slot;
-                      return GestureDetector(
-                        onTap: () => setState(() => _selectedTime = slot),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? Theme.of(context).primaryColor
-                                : Theme.of(context).cardTheme.color,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isSelected
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey.withOpacity(0.3),
+                          final isSelected = _selectedTime == slot;
+                          return GestureDetector(
+                            onTap: () => setState(() => _selectedTime = slot),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? Theme.of(context).primaryColor
+                                    : Theme.of(context).cardTheme.color,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? Theme.of(context).primaryColor
+                                      : Colors.grey.withValues(alpha: 0.3),
+                                ),
+                              ),
+                              child: Text(
+                                slot,
+                                style: TextStyle(
+                                  color: isSelected
+                                      ? Colors.white
+                                      : Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.color,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            slot,
-                            style: TextStyle(
-                              color: isSelected
-                                  ? Colors.white
-                                  : Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.color,
-                              fontWeight:
-                                  isSelected ? FontWeight.bold : FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                          );
+                        })
+                        .toList(),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 30),
-            // Book Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: SizedBox(
+              const SizedBox(height: 30),
+              // Book Button
+              SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
@@ -325,16 +345,13 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
                   ),
                   child: const Text(
                     'Book Amenity',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 30),
-          ],
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );
@@ -360,19 +377,13 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> {
               const SizedBox(height: 20),
               const Text(
                 'Booking Confirmed!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
                 '${_amenities[_selectedAmenity]['name']} booked for ${_selectedDate} at ${_selectedTime}',
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
-                ),
+                style: const TextStyle(color: Colors.grey, fontSize: 16),
               ),
               const SizedBox(height: 30),
               SizedBox(

@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
 import 'package:mygate_coepd/screens/guard/guard_dashboard_screen.dart';
+import 'package:mygate_coepd/screens/guard/visitor_management_screen.dart';
+import 'package:mygate_coepd/screens/guard/attendance_screen.dart';
+import 'package:mygate_coepd/screens/guard/profile_screen.dart';
 
 class GuardMainScreen extends StatefulWidget {
   const GuardMainScreen({super.key});
@@ -14,10 +17,18 @@ class GuardMainScreen extends StatefulWidget {
 class _GuardMainScreenState extends State<GuardMainScreen> {
   int _currentIndex = 0;
   
-  final List<Widget> _screens = [
-    const GuardDashboardScreen(),
-    // Add other guard screens here as they are implemented
-  ];
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      const GuardDashboardScreen(),
+      const VisitorManagementScreen(),
+      const AttendanceScreen(),
+      const GuardProfileScreen(),
+    ];
+  }
 
   void _onTabTapped(int index) {
     setState(() {

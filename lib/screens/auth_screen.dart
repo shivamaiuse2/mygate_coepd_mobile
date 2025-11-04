@@ -93,7 +93,9 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     final selectedRole = AppConfig.selectedRole ?? 'resident';
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final backgroundColor = isDarkMode ? const Color(0xFF121212) : const Color(0xFFf8f9fa);
+    final backgroundColor = isDarkMode
+        ? const Color(0xFF121212)
+        : const Color(0xFFf8f9fa);
     final surfaceColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
     final secondaryTextColor = isDarkMode ? Colors.white70 : Colors.grey;
@@ -131,7 +133,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       height: 120,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                       ),
                     ),
                   ),
@@ -143,12 +145,16 @@ class _AuthScreenState extends State<AuthScreen> {
                       height: 80,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 50.0),
+                    padding: const EdgeInsets.only(
+                      left: 24.0,
+                      right: 24.0,
+                      top: 50.0,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -158,7 +164,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
+                                color: Colors.white.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Icon(
@@ -178,7 +184,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 Text(
                                   'Logging in as',
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: Colors.white.withValues(alpha: 0.9),
                                     fontSize: 14,
                                   ),
                                 ),
@@ -213,7 +219,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               ? 'Sign in to access your community'
                               : 'Create an account to get started',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                             fontSize: 16,
                           ),
                         ),
@@ -247,31 +253,39 @@ class _AuthScreenState extends State<AuthScreen> {
                     // This ensures navigation follows the role selected in role selection screen
                     final selectedRole = AppConfig.selectedRole ?? 'resident';
                     if (selectedRole == 'guard') {
-                      Navigator.of(context).pushReplacement(
+                      // Navigator.of(context).pushReplacement(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const GuardMainScreen(),
+                      //   ),
+                      // );
+                      Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) => const GuardMainScreen(),
                         ),
+                        (route) => false,
                       );
                     } else if (selectedRole == 'admin') {
-                      Navigator.of(context).pushReplacement(
+                      Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) => const AdminMainScreen(),
                         ),
+                        (route) => false,
                       );
                     } else {
                       // Check if user is approved
                       if (state.user.isApproved == false) {
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const ApprovalPendingScreen(),
+                            builder: (context) => const ApprovalPendingScreen(),
                           ),
+                          (route) => false,
                         );
                       } else {
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                             builder: (context) => const ResidentMainScreen(),
                           ),
+                          (route) => false,
                         );
                       }
                     }
@@ -294,7 +308,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   ? []
                                   : [
                                       BoxShadow(
-                                        color: Colors.grey.withOpacity(0.1),
+                                        color: Colors.grey.withValues(alpha: 0.1),
                                         blurRadius: 10,
                                         offset: const Offset(0, 5),
                                       ),
@@ -305,7 +319,9 @@ class _AuthScreenState extends State<AuthScreen> {
                               style: TextStyle(color: textColor),
                               decoration: InputDecoration(
                                 labelText: 'Society ID',
-                                labelStyle: TextStyle(color: secondaryTextColor),
+                                labelStyle: TextStyle(
+                                  color: secondaryTextColor,
+                                ),
                                 prefixIcon: Icon(
                                   Icons.apartment_outlined,
                                   color: iconColor,
@@ -335,7 +351,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   ? []
                                   : [
                                       BoxShadow(
-                                        color: Colors.grey.withOpacity(0.1),
+                                        color: Colors.grey.withValues(alpha: 0.1),
                                         blurRadius: 10,
                                         offset: const Offset(0, 5),
                                       ),
@@ -346,7 +362,9 @@ class _AuthScreenState extends State<AuthScreen> {
                               style: TextStyle(color: textColor),
                               decoration: InputDecoration(
                                 labelText: 'Full Name',
-                                labelStyle: TextStyle(color: secondaryTextColor),
+                                labelStyle: TextStyle(
+                                  color: secondaryTextColor,
+                                ),
                                 prefixIcon: Icon(
                                   Icons.person_outline,
                                   color: iconColor,
@@ -377,7 +395,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                     ? []
                                     : [
                                         BoxShadow(
-                                          color: Colors.grey.withOpacity(0.1),
+                                          color: Colors.grey.withValues(alpha: 0.1),
                                           blurRadius: 10,
                                           offset: const Offset(0, 5),
                                         ),
@@ -388,7 +406,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                 style: TextStyle(color: textColor),
                                 decoration: InputDecoration(
                                   labelText: 'Unit/Apartment Number',
-                                  labelStyle: TextStyle(color: secondaryTextColor),
+                                  labelStyle: TextStyle(
+                                    color: secondaryTextColor,
+                                  ),
                                   prefixIcon: Icon(
                                     Icons.location_on_outlined,
                                     color: iconColor,
@@ -420,7 +440,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ? []
                                 : [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.1),
+                                      color: Colors.grey.withValues(alpha: 0.1),
                                       blurRadius: 10,
                                       offset: const Offset(0, 5),
                                     ),
@@ -455,9 +475,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 return 'Please enter your phone number';
                               }
                               // Simple phone validation
-                              if (!RegExp(
-                                r'^[0-9]{10,15}$',
-                              ).hasMatch(value)) {
+                              if (!RegExp(r'^[0-9]{10,15}$').hasMatch(value)) {
                                 return 'Please enter a valid phone number';
                               }
                               return null;
@@ -475,7 +493,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 ? []
                                 : [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.1),
+                                      color: Colors.grey.withValues(alpha: 0.1),
                                       blurRadius: 10,
                                       offset: const Offset(0, 5),
                                     ),
@@ -537,7 +555,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                         ? []
                                         : [
                                             BoxShadow(
-                                              color: Colors.grey.withOpacity(0.1),
+                                              color: Colors.grey.withValues(alpha: 
+                                                0.1,
+                                              ),
                                               blurRadius: 5,
                                               offset: const Offset(0, 2),
                                             ),
@@ -569,9 +589,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                       }
                                       // Update OTP string
                                       _otp = _otpControllers
-                                          .map(
-                                            (controller) => controller.text,
-                                          )
+                                          .map((controller) => controller.text)
                                           .join();
                                     },
                                   ),
