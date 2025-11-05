@@ -104,14 +104,23 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
   ];
 
   final List<Map<String, dynamic>> _quickAccess = [
-    {'icon': Icons.people, 'label': 'Residents'},
-    {'icon': Icons.description, 'label': 'Reports'},
-    {'icon': Icons.notifications, 'label': 'Notices'},
-    {'icon': Icons.home, 'label': 'Society'},
-    {'icon': Icons.calendar_today, 'label': 'Events'},
-    {'icon': Icons.credit_card, 'label': 'Payments'},
-    {'icon': Icons.bar_chart, 'label': 'Analytics'},
-    {'icon': Icons.checklist, 'label': 'Tasks'},
+    {'icon': Icons.apartment, 'label': 'Society Management', 'route': '/society-management'},
+    {'icon': Icons.people, 'label': 'Resident Management', 'route': '/resident-management'},
+    {'icon': Icons.business, 'label': 'Service Providers', 'route': '/service-providers'},
+    {'icon': Icons.checklist, 'label': 'Staff Attendance', 'route': '/staff-attendance'},
+    {'icon': Icons.house, 'label': 'Tenant Management', 'route': '/tenant-management'},
+    {'icon': Icons.swap_horiz, 'label': 'Move Process', 'route': '/move-process'},
+    {'icon': Icons.dashboard, 'label': 'Dashboard Config', 'route': '/dashboard-config'},
+    {'icon': Icons.description, 'label': 'Reports', 'route': '/reports'},
+    {'icon': Icons.settings, 'label': 'App Controls', 'route': '/app-controls'},
+    {'icon': Icons.camera, 'label': 'Selfie Attendance', 'route': '/selfie-attendance'},
+    {'icon': Icons.privacy_tip, 'label': 'Masked Directory', 'route': '/masked-directory'},
+    {'icon': Icons.business, 'label': 'Multi-Property', 'route': '/multi-property'},
+    {'icon': Icons.campaign, 'label': 'Notice Board', 'route': '/notice-board'},
+    {'icon': Icons.move_to_inbox, 'label': 'Resident Requests', 'route': '/resident-requests'},
+    {'icon': Icons.call, 'label': 'Resident Calling', 'route': '/resident-calling'},
+    {'icon': Icons.email, 'label': 'Email Campaigns', 'route': '/email-campaigns'},
+    {'icon': Icons.notifications, 'label': 'Push Notifications', 'route': '/push-notifications'},
   ];
 
   @override
@@ -304,26 +313,33 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                               itemBuilder: (context, index) {
                                 final item = _quickAccess[index];
                                 return Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(15),
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(
-                                          context,
-                                        ).cardTheme.color,
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.1),
-                                            blurRadius: 5,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Icon(
-                                        item['icon'],
-                                        color: Theme.of(context).primaryColor,
-                                        size: 28,
+                                    GestureDetector(
+                                      onTap: () {
+                                        // Navigate to the respective module
+                                        Navigator.pushNamed(context, item['route']);
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(15),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(
+                                            context,
+                                          ).cardTheme.color,
+                                          borderRadius: BorderRadius.circular(16),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.withOpacity(0.1),
+                                              blurRadius: 5,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Icon(
+                                          item['icon'],
+                                          color: Theme.of(context).primaryColor,
+                                          size: 28,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 8),

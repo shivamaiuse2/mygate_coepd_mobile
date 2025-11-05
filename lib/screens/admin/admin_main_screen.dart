@@ -16,8 +16,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   
   final List<Widget> _screens = [
     const AdminDashboardScreen(),
-    // We'll keep just essential screens in bottom nav
-    const Center(child: Text('Notifications')),
+    const Center(child: Text('Management')),
+    const Center(child: Text('Reports')),
     const Center(child: Text('Profile')),
   ];
 
@@ -40,12 +40,16 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
               onTap: _onTabTapped,
               items: const [
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.dashboard),
+                  icon: Icon(Icons.home),
                   label: 'Dashboard',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications),
-                  label: 'Notifications',
+                  icon: Icon(Icons.settings),
+                  label: 'Management',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.description),
+                  label: 'Reports',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person),

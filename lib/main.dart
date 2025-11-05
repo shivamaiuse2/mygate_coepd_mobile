@@ -21,6 +21,7 @@ import 'package:mygate_coepd/screens/resident/bills_payments_screen.dart';
 import 'package:mygate_coepd/screens/resident/amenity_booking_screen.dart';
 import 'package:mygate_coepd/screens/resident/community_screen.dart';
 import 'package:mygate_coepd/screens/resident/profile_screen.dart';
+import 'package:mygate_coepd/routes/admin_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,25 +60,32 @@ class CommunityLinkApp extends StatelessWidget {
             themeMode: ThemeMode.system,
             initialRoute: '/',
             routes: {
-              '/': (context) => const SplashScreen(),
-              '/onboarding': (context) => const OnboardingScreen(),
-              '/role-selection': (context) => const RoleSelectionScreen(),
-              '/auth': (context) => const AuthScreen(),
-              '/resident-main': (context) => const ResidentMainScreen(),
-              '/guard-main': (context) => const GuardMainScreen(),
-              '/admin-main': (context) => const AdminMainScreen(),
-              '/visitors': (context) => const VisitorManagementScreen(),
-              '/announcements': (context) => const AnnouncementsScreen(),
-              '/services': (context) => const ServiceRequestsScreen(),
-              '/bills': (context) => const BillsPaymentsScreen(),
-              '/amenities': (context) => const AmenityBookingScreen(),
-              '/community': (context) => const CommunityScreen(),
-              '/profile': (context) => const ProfileScreen(),
+              ..._getMainRoutes(),
+              ...AdminRoutes.getRoutes(),
             },
             debugShowCheckedModeBanner: false,
           ),
         ),
       ),
     );
+  }
+
+  static Map<String, WidgetBuilder> _getMainRoutes() {
+    return {
+      '/': (context) => const SplashScreen(),
+      '/onboarding': (context) => const OnboardingScreen(),
+      '/role-selection': (context) => const RoleSelectionScreen(),
+      '/auth': (context) => const AuthScreen(),
+      '/resident-main': (context) => const ResidentMainScreen(),
+      '/guard-main': (context) => const GuardMainScreen(),
+      '/admin-main': (context) => const AdminMainScreen(),
+      '/visitors': (context) => const VisitorManagementScreen(),
+      '/announcements': (context) => const AnnouncementsScreen(),
+      '/services': (context) => const ServiceRequestsScreen(),
+      '/bills': (context) => const BillsPaymentsScreen(),
+      '/amenities': (context) => const AmenityBookingScreen(),
+      '/community': (context) => const CommunityScreen(),
+      '/profile': (context) => const ProfileScreen(),
+    };
   }
 }
