@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_event.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
@@ -71,6 +72,8 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
               onPressed: () {
                 Navigator.pop(context);
                 context.read<AuthBloc>().add(LogoutRequested());
+                // Navigate to login screen
+                Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: const Text(
@@ -135,12 +138,6 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
         if (state is Authenticated) {
           final user = state.user;
           return Scaffold(
-            appBar: AppBar(
-              title: const Text('My Profile'),
-              actions: [
-                IconButton(onPressed: _logout, icon: const Icon(Icons.logout)),
-              ],
-            ),
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -206,33 +203,32 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
                                     // Name
                                     Text(
                                       user.name,
-                                      style: const TextStyle(
-                                        fontSize: 22,
+                                      style: TextStyle(
+                                        fontSize: 22.sp,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                     ),
-                                    const SizedBox(height: 5),
+                                    SizedBox(height: 5.h),
 
                                     // Role Badge
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 4,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w,
+                                        vertical: 4.h,
                                       ),
                                       decoration: BoxDecoration(
                                         color: AppTheme.primary.withValues(alpha: 
                                           0.1,
                                         ),
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(20.r),
                                       ),
-                                      child: const Text(
+                                      child: Text(
                                         'Security Guard',
                                         style: TextStyle(
                                           color: AppTheme.primary,
-                                          fontSize: 13,
+                                          fontSize: 13.sp,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -259,7 +255,7 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
                               ),
 
                               // 🧍 Right Side — Profile Image
-                              const SizedBox(width: 16),
+                              SizedBox(width: 16.w),
                               Stack(
                                 children: [
                                   Container(
@@ -275,7 +271,7 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
                                       ],
                                     ),
                                     child: CircleAvatar(
-                                      radius: 55,
+                                      radius: 55.r,
                                       backgroundColor: Colors.white,
                                       backgroundImage:
                                           user.profileImage != null
@@ -284,9 +280,9 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
                                             )
                                           : null,
                                       child: user.profileImage == null
-                                          ? const Icon(
+                                          ? Icon(
                                               Icons.person,
-                                              size: 50,
+                                              size: 50.sp,
                                               color: AppTheme.primary,
                                             )
                                           : null,
@@ -300,15 +296,15 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
                                         // edit profile image
                                       },
                                       child: Container(
-                                        padding: const EdgeInsets.all(5),
+                                        padding: EdgeInsets.all(5.w),
                                         decoration: const BoxDecoration(
                                           color: AppTheme.primary,
                                           shape: BoxShape.circle,
                                         ),
-                                        child: const Icon(
+                                        child: Icon(
                                           Icons.camera_alt,
                                           color: Colors.white,
-                                          size: 16,
+                                          size: 16.sp,
                                         ),
                                       ),
                                     ),
@@ -349,7 +345,7 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
                                       _notificationsEnabled = value;
                                     });
                                   },
-                                  activeColor: AppTheme.primary,
+                                  activeThumbColor: AppTheme.primary,
                                 ),
                               ),
                               const Divider(height: 0),
@@ -363,7 +359,7 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
                                       _biometricEnabled = value;
                                     });
                                   },
-                                  activeColor: AppTheme.primary,
+                                  activeThumbColor: AppTheme.primary,
                                 ),
                               ),
                               const Divider(height: 0),
@@ -414,7 +410,7 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
                                         color: activity['color'].withValues(alpha: 
                                           0.1,
                                         ),
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(12.r),
                                       ),
                                       child: Icon(
                                         activity['icon'],
@@ -425,9 +421,9 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
                                     subtitle: Text(activity['description']),
                                     trailing: Text(
                                       activity['time'],
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.grey,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                       ),
                                     ),
                                   ),
@@ -502,13 +498,12 @@ class _GuardProfileScreenState extends State<GuardProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(icon, color: AppTheme.primary, size: 20),
-        const SizedBox(width: 10),
+        SizedBox(width: 10.w),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              fontSize: 15,
-              color: Colors.black87,
+            style: TextStyle(
+              fontSize: 15.sp,
               fontWeight: FontWeight.w500,
             ),
             maxLines: 2,

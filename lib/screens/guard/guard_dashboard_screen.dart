@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
 import 'package:mygate_coepd/theme/app_theme.dart';
@@ -176,9 +177,7 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
       case 'vendor_access':
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const VendorAccessScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => const VendorAccessScreen()),
         );
         break;
       case 'vehicle_log':
@@ -200,9 +199,7 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
       case 'call_guard':
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const GuardCallingScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => const GuardCallingScreen()),
         );
         break;
       case 'temp_check':
@@ -224,17 +221,13 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
       case 'e_intercom':
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const EIntercomScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => const EIntercomScreen()),
         );
         break;
       case 'offline_mode':
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const OfflineModeScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => const OfflineModeScreen()),
         );
         break;
       case 'language':
@@ -263,393 +256,371 @@ class _GuardDashboardScreenState extends State<GuardDashboardScreen> {
         if (state is Authenticated) {
           final user = state.user;
           return Scaffold(
-            appBar: AppBar(
-              title: const Text('Guard Dashboard'),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    // Notification action
-                  },
-                  icon: const Icon(Icons.notifications),
-                ),
-                IconButton(
-                  onPressed: () {
-                    // Menu action
-                  },
-                  icon: const Icon(Icons.menu),
-                ),
-              ],
-            ),
-            body: Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        // Offline Banner
-                        if (_isOffline)
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            color: Colors.amber,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Row(
-                                  children: [
-                                    Icon(Icons.wifi_off, color: Colors.white),
-                                    SizedBox(width: 10),
-                                    Text(
-                                      'Offline Mode',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isOffline = false;
-                                    });
-                                  },
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        // Search Bar at top
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          elevation: 5,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.search, color: Colors.grey),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: TextField(
-                                    decoration: const InputDecoration(
-                                      hintText:
-                                          'Search visitors, vehicles or flats...',
-                                      border: InputBorder.none,
-                                    ),
-                                    onSubmitted: (value) {
-                                      // Handle search
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Icon(
-                                    Icons.person,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        // Quick Actions
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 15),
-                            const Text(
-                              'Quick Actions',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 15,
-                              ),
-                              itemCount: _quickActions.length,
-                              itemBuilder: (context, index) {
-                                final action = _quickActions[index];
-                                return Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () => _navigateToScreen(action['screen']),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(15),
-                                        decoration: BoxDecoration(
-                                          color: action['color'],
-                                          borderRadius: BorderRadius.circular(16),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: action['color']
-                                                  .withValues(alpha: 0.3),
-                                              blurRadius: 10,
-                                              offset: const Offset(0, 5),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Icon(
-                                          action['icon'],
-                                          color: Colors.white,
-                                          size: 24,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      action['label'],
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        // Pending Approvals
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  children: [
+                    // Offline Banner
+                    if (_isOffline)
+                      Container(
+                        padding: EdgeInsets.all(10.w),
+                        color: Colors.amber,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Pending Approvals',
+                                Icon(Icons.wifi_off, color: Colors.white),
+                                SizedBox(width: 10.w),
+                                Text(
+                                  'Offline Mode',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    '${_pendingVisitors.length}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
+                              ],
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isOffline = false;
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    // Search Bar at top
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.r),
+                      ),
+                      elevation: 5,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Search visitors, vehicles or flats...',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14.sp,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 16.h,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.grey,
+                            size: 20.sp,
+                          ),
+                        ),
+                        onSubmitted: (value) {
+                          // Handle search
+                        },
+                      ),
+                    ),
+                    // Quick Actions
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 15.h),
+                        Text(
+                          'Quick Actions',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 15.h),
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                                crossAxisSpacing: 15.w,
+                                mainAxisSpacing: 15.h,
+                              ),
+                          itemCount: _quickActions.length,
+                          itemBuilder: (context, index) {
+                            final action = _quickActions[index];
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () =>
+                                      _navigateToScreen(action['screen']),
+                                  child: Container(
+                                    padding: EdgeInsets.all(15.w),
+                                    decoration: BoxDecoration(
+                                      color: action['color'],
+                                      borderRadius: BorderRadius.circular(16.r),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: action['color'].withValues(
+                                            alpha: 0.3,
+                                          ),
+                                          blurRadius: 10.w,
+                                          offset: Offset(0, 5.h),
+                                        ),
+                                      ],
                                     ),
+                                    child: Icon(
+                                      action['icon'],
+                                      color: Colors.white,
+                                      size: 24.sp,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Flexible(
+                                  child: Text(
+                                    action['label'],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 10.sp),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    // Pending Approvals
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Pending Approvals',
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            const SizedBox(height: 15),
-                            if (_pendingVisitors.isNotEmpty)
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: _pendingVisitors.length,
-                                itemBuilder: (context, index) {
-                                  final visitor = _pendingVisitors[index];
-                                  return Card(
-                                    margin: const EdgeInsets.only(bottom: 15),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15),
-                                      child: Column(
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(20.r),
+                              ),
+                              child: Text(
+                                '${_pendingVisitors.length}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 15.h),
+                        if (_pendingVisitors.isNotEmpty)
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _pendingVisitors.length,
+                            itemBuilder: (context, index) {
+                              final visitor = _pendingVisitors[index];
+                              return Card(
+                                margin: EdgeInsets.only(bottom: 15.h),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(15.w),
+                                  child: Column(
+                                    children: [
+                                      Row(
                                         children: [
-                                          Row(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 25,
-                                                backgroundImage:
-                                                    CachedNetworkImageProvider(
-                                                        visitor['image']),
-                                              ),
-                                              const SizedBox(width: 15),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      visitor['name'],
-                                                      style: const TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 5),
-                                                    Text(
-                                                      visitor['type'],
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      'For: ${visitor['flat']} • ${visitor['time']}',
-                                                      style: const TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                                  ],
+                                          CircleAvatar(
+                                            radius: 25.r,
+                                            backgroundImage:
+                                                CachedNetworkImageProvider(
+                                                  visitor['image'],
                                                 ),
-                                              ),
-                                            ],
                                           ),
-                                          const SizedBox(height: 15),
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: OutlinedButton(
-                                                  onPressed: () {
-                                                    _handleReject(visitor['id']);
-                                                  },
-                                                  child: const Text('Reject'),
+                                          SizedBox(width: 15.w),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  visitor['name'],
+                                                  style: TextStyle(
+                                                    fontSize: 16.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  overflow: TextOverflow
+                                                      .ellipsis, // ADD THIS
+                                                  maxLines: 1,
                                                 ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                child: ElevatedButton(
-                                                  onPressed: () {
-                                                    _handleApprove(visitor['id']);
-                                                  },
-                                                  child: const Text('Approve'),
+                                                SizedBox(height: 5.h),
+                                                Text(
+                                                  visitor['type'],
+                                                  style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
                                                 ),
-                                              ),
-                                            ],
+                                                Text(
+                                                  'For: ${visitor['flat']} • ${visitor['time']}',
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  );
-                                },
-                              )
-                            else
-                              Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                        size: 40,
-                                      ),
-                                      const SizedBox(height: 15),
-                                      const Text(
-                                        'No pending approvals',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
+                                      SizedBox(height: 15.h),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: OutlinedButton(
+                                              onPressed: () {
+                                                _handleReject(visitor['id']);
+                                              },
+                                              child: const Text('Reject'),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                _handleApprove(visitor['id']);
+                                              },
+                                              child: const Text('Approve'),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        // Recent Activity
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Recent Activity',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // View all activity
-                                  },
-                                  child: const Text('View All'),
-                                ),
-                              ],
+                              );
+                            },
+                          )
+                        else
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.r),
                             ),
-                            const SizedBox(height: 10),
-                            Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
+                            child: Padding(
+                              padding: EdgeInsets.all(20.w),
                               child: Column(
-                                children: _recentActivity
-                                    .map(
-                                      (activity) => ListTile(
-                                        leading: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            color: activity['iconBg']
-                                                .withValues(alpha: 0.1),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          child: Icon(
-                                            activity['icon'],
-                                            color: activity['iconColor'],
-                                          ),
-                                        ),
-                                        title: Text(activity['title']),
-                                        subtitle: Text(activity['description']),
-                                        trailing: Text(
-                                          activity['time'],
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
+                                children: [
+                                  Icon(
+                                    Icons.check_circle,
+                                    color: Colors.green,
+                                    size: 40.sp,
+                                  ),
+                                  SizedBox(height: 15.h),
+                                  const Text(
+                                    'No pending approvals',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 20), // Reduced space
+                          ),
                       ],
                     ),
-                  ),
+                    SizedBox(height: 10.h),
+                    // Recent Activity
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Recent Activity',
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // View all activity
+                              },
+                              child: const Text('View All'),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          child: Column(
+                            children: _recentActivity
+                                .map(
+                                  (activity) => ListTile(
+                                    leading: Container(
+                                      padding: EdgeInsets.all(10.w),
+                                      decoration: BoxDecoration(
+                                        color: activity['iconBg'].withValues(
+                                          alpha: 0.1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(
+                                          12.r,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        activity['icon'],
+                                        color: activity['iconColor'],
+                                      ),
+                                    ),
+                                    title: Text(activity['title']),
+                                    subtitle: Text(activity['description']),
+                                    trailing: Text(
+                                      activity['time'],
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h), // Reduced space
+                  ],
                 ),
-              ],
+              ),
             ),
             // Removed bottomNavigationBar from here since it's handled in GuardMainScreen
           );
         }
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
       },
     );
   }

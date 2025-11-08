@@ -15,7 +15,7 @@ class AdminDashboardScreen extends StatefulWidget {
 class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _currentIndex = 0;
+  final int _currentIndex = 0;
 
   final List<Map<String, dynamic>> _stats = [
     {
@@ -143,12 +143,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
     // Handle rejection logic
   }
 
-  void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
@@ -231,7 +225,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                         Container(
                                           padding: EdgeInsets.all(10.r),
                                           decoration: BoxDecoration(
-                                            color: stat['color'].withOpacity(
+                                            color: stat['color'].withValues(alpha: 
                                               0.1,
                                             ),
                                             borderRadius: BorderRadius.circular(
@@ -329,7 +323,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                           borderRadius: BorderRadius.circular(16),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.grey.withOpacity(0.1),
+                                              color: Colors.grey.withValues(alpha: 0.1),
                                               blurRadius: 5,
                                               offset: const Offset(0, 2),
                                             ),
@@ -424,7 +418,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                                     ),
                                                 backgroundColor: Theme.of(
                                                   context,
-                                                ).primaryColor.withOpacity(0.1),
+                                                ).primaryColor.withValues(alpha: 0.1),
                                               ),
                                               const SizedBox(width: 15),
                                               Expanded(
@@ -587,7 +581,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
                                           padding: const EdgeInsets.all(10),
                                           decoration: BoxDecoration(
                                             color: activity['iconBg']
-                                                .withOpacity(0.1),
+                                                .withValues(alpha: 0.1),
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),

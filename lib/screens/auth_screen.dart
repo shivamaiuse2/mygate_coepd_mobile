@@ -38,8 +38,13 @@ class _AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     // Pre-fill phone if remember device is enabled
+    // Only pre-fill actual phone numbers, not role names
     if (AppConfig.rememberDevice && AppConfig.selectedRole != null) {
-      _phoneController.text = AppConfig.selectedRole ?? '';
+      // Check if the stored value is actually a phone number (10-15 digits)
+      final selectedRole = AppConfig.selectedRole ?? '';
+      if (RegExp(r'^[0-9]{10,15}$').hasMatch(selectedRole)) {
+        _phoneController.text = selectedRole;
+      }
     }
   }
 

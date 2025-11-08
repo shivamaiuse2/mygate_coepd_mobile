@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
 import 'package:mygate_coepd/theme/app_theme.dart';
@@ -16,8 +17,8 @@ class AttendanceScreen extends StatefulWidget {
 
 class _AttendanceScreenState extends State<AttendanceScreen> {
   bool _isOffline = false;
-  int _selectedMonth = DateTime.now().month;
-  int _selectedYear = DateTime.now().year;
+  final int _selectedMonth = DateTime.now().month;
+  final int _selectedYear = DateTime.now().year;
 
   final List<Map<String, dynamic>> _patrolRoutes = [
     {
@@ -115,25 +116,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       builder: (context, state) {
         if (state is Authenticated) {
           return Scaffold(
-            appBar: AppBar(
-              title: const Text('Attendance & Patrol'),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    // Refresh action
-                  },
-                  icon: const Icon(Icons.refresh),
-                ),
-                IconButton(
-                  onPressed: () {
-                    // Filter action
-                  },
-                  icon: const Icon(Icons.filter_list),
-                ),
-              ],
-            ),
             body: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.only(left: 16.w, right: 16.w, top: 16.h),
               child: SingleChildScrollView(
                 child: Column(
                   spacing: 20.0,
@@ -197,8 +181,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                               index++
                             )
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w,
                                 ),
                                 child: Column(
                                   children: [
@@ -222,26 +206,26 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                         decoration: BoxDecoration(
                                           color: _quickActions[index]['color'],
                                           borderRadius: BorderRadius.circular(
-                                            16,
+                                            16.r,
                                           ),
                                           boxShadow: [
                                             BoxShadow(
                                               color:
                                                   _quickActions[index]['color']
                                                       .withValues(alpha: 0.3),
-                                              blurRadius: 10,
-                                              offset: const Offset(0, 5),
+                                              blurRadius: 10.w,
+                                              offset: Offset(0, 5.h),
                                             ),
                                           ],
                                         ),
                                         child: Icon(
                                           _quickActions[index]['icon'],
                                           color: Colors.white,
-                                          size: 30,
+                                          size: 30.sp,
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
+                                    SizedBox(height: 8.h),
                                     Text(
                                       _quickActions[index]['label'],
                                       textAlign: TextAlign.center,
@@ -296,9 +280,9 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                   onPressed: _markAttendance,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: AppTheme.primary,
-                                    minimumSize: const Size(
+                                    minimumSize: Size(
                                       double.infinity,
-                                      50,
+                                      50.h,
                                     ),
                                   ),
                                   child: const Text(
@@ -397,7 +381,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                           itemBuilder: (context, index) {
                             final route = _patrolRoutes[index];
                             return Card(
-                              margin: const EdgeInsets.only(bottom: 15),
+                              margin: EdgeInsets.only(bottom: 15.h),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
@@ -418,9 +402,9 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                           ),
                                         ),
                                         Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                            vertical: 5,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w,
+                                            vertical: 5.h,
                                           ),
                                           decoration: BoxDecoration(
                                             color:
@@ -431,7 +415,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                                 ? Colors.orange.withValues(alpha: 0.2)
                                                 : Colors.grey.withValues(alpha: 0.2),
                                             borderRadius: BorderRadius.circular(
-                                              12,
+                                              12.r,
                                             ),
                                           ),
                                           child: Text(
@@ -444,7 +428,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                                         'In Progress'
                                                   ? Colors.orange
                                                   : Colors.grey,
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -477,7 +461,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                             child: const Text('Details'),
                                           ),
                                         ),
-                                        const SizedBox(width: 10),
+                                        SizedBox(width: 10.w),
                                         Expanded(
                                           child: ElevatedButton(
                                             onPressed: _scanQRCode,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BillsPaymentsScreen extends StatefulWidget {
   const BillsPaymentsScreen({super.key});
@@ -9,8 +10,8 @@ class BillsPaymentsScreen extends StatefulWidget {
 
 class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerProviderStateMixin {
   String _selectedTab = 'bills';
-  bool _showPaymentMethods = false;
-  TextEditingController _searchController = TextEditingController();
+  final bool _showPaymentMethods = false;
+  final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _filteredBills = [];
   List<Map<String, dynamic>> _filteredPaymentHistory = [];
   late AnimationController _animationController;
@@ -146,42 +147,44 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
         children: [
           // Tab Selection
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.w),
             child: Row(
               children: [
                 Expanded(
-                  child: ScaleTransition(
-                    scale: _fadeAnimation,
-                    child: ElevatedButton(
-                      onPressed: () => setState(() => _selectedTab = 'bills'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _selectedTab == 'bills'
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).cardTheme.color,
-                        foregroundColor: _selectedTab == 'bills'
-                            ? Colors.white
-                            : Theme.of(context).textTheme.bodyLarge?.color,
+                  child: ElevatedButton(
+                    onPressed: () => setState(() => _selectedTab = 'bills'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _selectedTab == 'bills'
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).cardTheme.color,
+                      foregroundColor: _selectedTab == 'bills'
+                          ? Colors.white
+                          : Theme.of(context).textTheme.bodyLarge?.color,
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: const Text('Bills'),
                     ),
+                    child: Text('Bills', style: TextStyle(fontSize: 16.sp)),
                   ),
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: 10.w),
                 Expanded(
-                  child: ScaleTransition(
-                    scale: _fadeAnimation,
-                    child: ElevatedButton(
-                      onPressed: () => setState(() => _selectedTab = 'history'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _selectedTab == 'history'
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).cardTheme.color,
-                        foregroundColor: _selectedTab == 'history'
-                            ? Colors.white
-                            : Theme.of(context).textTheme.bodyLarge?.color,
+                  child: ElevatedButton(
+                    onPressed: () => setState(() => _selectedTab = 'history'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _selectedTab == 'history'
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).cardTheme.color,
+                      foregroundColor: _selectedTab == 'history'
+                          ? Colors.white
+                          : Theme.of(context).textTheme.bodyLarge?.color,
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: const Text('Payment History'),
                     ),
+                    child: Text('Payment History', style: TextStyle(fontSize: 16.sp)),
                   ),
                 ),
               ],
@@ -203,7 +206,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
       children: [
         // Summary Cards
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Row(
             children: [
               Expanded(
@@ -216,7 +219,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
                   ),
                   child: Card(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                     elevation: 4,
                     child: Container(
@@ -229,52 +232,52 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
                             const Color(0xFFFFF8F8),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: EdgeInsets.all(16.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(8),
+                                  padding: EdgeInsets.all(8.w),
                                   decoration: const BoxDecoration(
                                     color: Colors.red,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.warning,
                                     color: Colors.white,
-                                    size: 16,
+                                    size: 16.sp,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
-                                const Text(
+                                SizedBox(width: 8.w),
+                                Text(
                                   'Total Due',
                                   style: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
-                            const Text(
+                            SizedBox(height: 8.h),
+                            Text(
                               '₹3,300',
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 24.sp,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.red,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            const Text(
+                            SizedBox(height: 4.h),
+                            Text(
                               '2 bills pending',
                               style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ],
@@ -284,7 +287,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10.w),
               Expanded(
                 child: ScaleTransition(
                   scale: Tween<double>(begin: 0.9, end: 1.0).animate(
@@ -295,7 +298,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
                   ),
                   child: Card(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                     elevation: 4,
                     child: Container(
@@ -308,52 +311,52 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
                             const Color(0xFFFFFCF8),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: EdgeInsets.all(16.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(8),
+                                  padding: EdgeInsets.all(8.w),
                                   decoration: const BoxDecoration(
                                     color: Colors.orange,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.schedule,
                                     color: Colors.white,
-                                    size: 16,
+                                    size: 16.sp,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
-                                const Text(
+                                SizedBox(width: 8.w),
+                                Text(
                                   'Upcoming',
                                   style: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
-                            const Text(
+                            SizedBox(height: 8.h),
+                            Text(
                               '₹1,200',
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 24.sp,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.orange,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            const Text(
+                            SizedBox(height: 4.h),
+                            Text(
                               '1 bill upcoming',
                               style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ],
@@ -366,13 +369,33 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 20.h),
+        // Search Bar
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardTheme.color,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search bills...',
+                prefixIcon: Icon(Icons.search, size: 24.sp),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(16.w),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 20.h),
         // Bills List
         Expanded(
           child: _filteredBills.isEmpty
               ? _buildEmptyBillsState()
               : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
                   itemCount: _filteredBills.length,
                   itemBuilder: (context, index) {
                     final bill = _filteredBills[index];
@@ -381,16 +404,16 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
                         CurvedAnimation(
                           parent: _animationController,
                           curve: Interval(
-                            0.1 * index,
-                            0.3 + (0.1 * index),
+                            0.2 + (0.1 * index),
+                            0.5 + (0.1 * index),
                             curve: Curves.elasticOut,
                           ),
                         ),
                       ),
                       child: Card(
-                        margin: const EdgeInsets.only(bottom: 16),
+                        margin: EdgeInsets.only(bottom: 16.h),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
                         elevation: 3,
                         child: Container(
@@ -403,112 +426,101 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
                                 Theme.of(context).cardTheme.color!.withValues(alpha: 0.95),
                               ],
                             ),
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(16.r),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: EdgeInsets.all(16.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
-                                      child: Text(
-                                        bill['title'],
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            bill['title'],
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4.h),
+                                          Text(
+                                            bill['period'],
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14.sp,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 6,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w,
+                                        vertical: 5.h,
                                       ),
                                       decoration: BoxDecoration(
                                         color: _getStatusColor(bill['status']),
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(12.r),
                                       ),
                                       child: Text(
                                         bill['status'],
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  bill['period'],
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
+                                SizedBox(height: 16.h),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          'Amount',
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        Text(
-                                          bill['amount'],
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                    Icon(
+                                      Icons.calendar_today,
+                                      size: 16.sp,
+                                      color: Colors.grey,
                                     ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        const Text(
-                                          'Due Date',
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        Text(
-                                          bill['dueDate'],
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      'Due: ${bill['dueDate']}',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14.sp,
+                                      ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 16),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      _showPaymentOptions(bill);
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Theme.of(context).primaryColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                                SizedBox(height: 16.h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      bill['amount'],
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).primaryColor,
                                       ),
                                     ),
-                                    child: const Text('Pay Now'),
-                                  ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        _showPaymentOptions(bill);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Theme.of(context).primaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12.r),
+                                        ),
+                                        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                                      ),
+                                      child: Text('Pay Now', style: TextStyle(fontSize: 14.sp)),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -527,7 +539,7 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
     return _filteredPaymentHistory.isEmpty
         ? _buildEmptyHistoryState()
         : ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             itemCount: _filteredPaymentHistory.length,
             itemBuilder: (context, index) {
               final payment = _filteredPaymentHistory[index];
@@ -543,12 +555,12 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
                   ),
                 ),
                 child: Card(
-                  margin: const EdgeInsets.only(bottom: 16),
+                  margin: EdgeInsets.only(bottom: 16.h),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -557,81 +569,84 @@ class _BillsPaymentsScreenState extends State<BillsPaymentsScreen> with TickerPr
                           children: [
                             Text(
                               payment['title'],
-                              style: const TextStyle(
-                                fontSize: 16,
+                              style: TextStyle(
+                                fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
                               payment['amount'],
-                              style: const TextStyle(
-                                fontSize: 18,
+                              style: TextStyle(
+                                fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               payment['date'],
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.grey,
+                                fontSize: 14.sp,
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 5.h,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.green.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Paid',
                                 style: TextStyle(
                                   color: Colors.green,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12.h),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.payment,
-                              size: 16,
+                              size: 16.sp,
                               color: Colors.grey,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             Text(
                               'Method: ${payment['method']}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.grey,
+                                fontSize: 14.sp,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4.h),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.receipt,
-                              size: 16,
+                              size: 16.sp,
                               color: Colors.grey,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             Text(
                               'Receipt: ${payment['receipt']}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.grey,
+                                fontSize: 14.sp,
                               ),
                             ),
                           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
 import 'package:mygate_coepd/theme/app_theme.dart';
@@ -198,7 +199,7 @@ class _UtilityVehicleTrackingScreenState extends State<UtilityVehicleTrackingScr
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(15),
+                        padding: EdgeInsets.all(15.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -207,15 +208,15 @@ class _UtilityVehicleTrackingScreenState extends State<UtilityVehicleTrackingScr
                               children: [
                                 Text(
                                   vehicle['type'],
-                                  style: const TextStyle(
-                                    fontSize: 18,
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 5,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w,
+                                    vertical: 5.h,
                                   ),
                                   decoration: BoxDecoration(
                                     color: vehicle['status'] == 'inside'
@@ -223,7 +224,7 @@ class _UtilityVehicleTrackingScreenState extends State<UtilityVehicleTrackingScr
                                         : vehicle['status'] == 'exited'
                                             ? Colors.grey.withValues(alpha: 0.2)
                                             : Colors.orange.withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(12.r),
                                   ),
                                   child: Text(
                                     vehicle['status'].toString().toUpperCase(),
@@ -233,7 +234,7 @@ class _UtilityVehicleTrackingScreenState extends State<UtilityVehicleTrackingScr
                                           : vehicle['status'] == 'exited'
                                               ? Colors.grey
                                               : Colors.orange,
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -317,7 +318,7 @@ class _UtilityVehicleTrackingScreenState extends State<UtilityVehicleTrackingScr
                                       child: const Text('Call Driver'),
                                     ),
                                   ),
-                                  const SizedBox(width: 10),
+                                  SizedBox(width: 10.w),
                                   Expanded(
                                     child: ElevatedButton(
                                       onPressed: () => _markExit(vehicle['id']),

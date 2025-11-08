@@ -73,6 +73,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
     await userRepository.logout();
+    // Clear selected role if remember device is disabled
+    if (!AppConfig.rememberDevice) {
+      AppConfig.setSelectedRole(null);
+    }
     emit(Unauthenticated());
   }
 

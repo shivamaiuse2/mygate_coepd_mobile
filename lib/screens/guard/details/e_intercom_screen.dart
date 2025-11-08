@@ -284,27 +284,23 @@ class _EIntercomScreenState extends State<EIntercomScreen> {
                           const SizedBox(height: 15),
                           const Text(
                             'In offline scenarios, IVR calls are automatically triggered to residents for approvals.',
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           ),
                           const SizedBox(height: 15),
                           Row(
                             children: [
                               const Icon(Icons.info, color: AppTheme.primary),
                               const SizedBox(width: 10),
-                              Text(
-                                'IVR calls will be sent to primary and secondary numbers.',
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic,
+                              Flexible(
+                                child: Text(
+                                  'IVR calls will be sent to primary and secondary numbers.',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const Text(
-                                'IVR calls will be sent to primary and secondary numbers.',
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),

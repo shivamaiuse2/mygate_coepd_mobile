@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AnnouncementsScreen extends StatefulWidget {
   const AnnouncementsScreen({super.key});
@@ -116,12 +117,12 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Announcements'),
+        title: Text('Announcements', style: TextStyle(fontSize: 18.sp)),
         actions: [
           ScaleTransition(
             scale: _fadeAnimation,
             child: IconButton(
-              icon: const Icon(Icons.search),
+              icon: Icon(Icons.search, size: 24.sp),
               onPressed: _showSearchBar,
             ),
           ),
@@ -129,16 +130,16 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
       ),
       body: Column(
         children: [
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           // Category Filter
           FadeTransition(
             opacity: _fadeAnimation,
             child: SizedBox(
-              height: 50,
+              height: 50.h,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: _categories.map((category) {
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                children: _categories.map<Widget>((category) {
                   final isSelected = _selectedCategory == category;
                   return ScaleTransition(
                     scale: Tween<double>(begin: 0.9, end: 1.0).animate(
@@ -157,13 +158,13 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                         _filterAnnouncements();
                       }),
                       child: Container(
-                        margin: const EdgeInsets.only(right: 10),
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        margin: EdgeInsets.only(right: 10.w),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
                         decoration: BoxDecoration(
                           color: isSelected
                               ? Theme.of(context).primaryColor
                               : Theme.of(context).cardTheme.color,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Center(
                           child: Text(
@@ -173,6 +174,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                                   ? Colors.white
                                   : Theme.of(context).textTheme.bodyLarge?.color,
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              fontSize: 14.sp,
                             ),
                           ),
                         ),
@@ -183,13 +185,13 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           // Announcements List
           Expanded(
             child: _filteredAnnouncements.isEmpty
                 ? _buildEmptyState()
                 : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
                     itemCount: _filteredAnnouncements.length,
                     itemBuilder: (context, index) {
                       return _buildAnnouncementItem(index);
@@ -220,9 +222,9 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
         onTap: () => setState(() => _selectedAnnouncement = 
           _selectedAnnouncement == announcement['id'] ? -1 : announcement['id']),
         child: Card(
-          margin: const EdgeInsets.only(bottom: 16),
+          margin: EdgeInsets.only(bottom: 16.h),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
           ),
           elevation: 4,
           child: Container(
@@ -235,7 +237,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                   Theme.of(context).cardTheme.color!.withValues(alpha: 0.95),
                 ],
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,21 +245,21 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                 Stack(
                   children: [
                     ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(16),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16.r),
                       ),
                       child: CachedNetworkImage(
                         imageUrl: announcement['image'],
-                        height: 150,
+                        height: 150.h,
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ),
                     ),
                     Container(
-                      height: 150,
+                      height: 150.h,
                       decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(16),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16.r),
                         ),
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
@@ -270,42 +272,42 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                       ),
                     ),
                     Positioned(
-                      top: 10,
-                      right: 10,
+                      top: 10.h,
+                      right: 10.w,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 6.h,
                         ),
                         decoration: BoxDecoration(
                           color: announcement['tagColor'],
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20.r),
                           boxShadow: [
                             BoxShadow(
                               color: announcement['tagColor'].withValues(alpha: 0.3),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
+                              blurRadius: 4.w,
+                              offset: Offset(0, 2.h),
                             ),
                           ],
                         ),
                         child: Text(
                           announcement['tag'],
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
                     Positioned(
-                      bottom: 10,
-                      left: 10,
+                      bottom: 10.h,
+                      left: 10.w,
                       child: Text(
                         announcement['title'],
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -313,7 +315,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -321,22 +323,23 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 5.h,
                             ),
                             decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(12.r),
                               border: Border.all(
                                 color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                                width: 1.w,
                               ),
                             ),
                             child: Text(
                               announcement['date'],
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ),
@@ -344,20 +347,23 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                             Icon(
                               Icons.keyboard_arrow_down,
                               color: Colors.grey.shade600,
+                              size: 24.sp,
                             )
                           else
                             Icon(
                               Icons.keyboard_arrow_up,
                               color: Colors.grey.shade600,
+                              size: 24.sp,
                             ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       if (isSelected)
                         Text(
                           announcement['description'],
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.grey,
+                            fontSize: 14.sp,
                           ),
                         ),
                     ],
@@ -375,16 +381,16 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (context) {
         return Container(
           padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 16,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+            left: 16.w,
+            right: 16.w,
+            top: 16.h,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 16.h,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -392,15 +398,15 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
               TextField(
                 controller: _searchController,
                 autofocus: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Search announcements...',
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: Icon(Icons.search, size: 24.sp),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    borderRadius: BorderRadius.all(Radius.circular(12.r)),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -408,7 +414,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF006D77),
                   ),
-                  child: const Text('Search'),
+                  child: Text('Search', style: TextStyle(fontSize: 16.sp)),
                 ),
               ),
             ],
@@ -423,42 +429,42 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
     
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20.w),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 40,
-                    height: 4,
+                    width: 40.w,
+                    height: 4.h,
                     decoration: BoxDecoration(
                       color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(2.r),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
+                  SizedBox(height: 20.h),
+                  Text(
                     'Filter Announcements',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
+                  SizedBox(height: 20.h),
+                  Text(
                     'Category',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   Wrap(
-                    spacing: 10,
-                    children: _categories.map((category) {
+                    spacing: 10.w,
+                    children: _categories.map<Widget>((category) {
                       return FilterChip(
-                        label: Text(category),
+                        label: Text(category, style: TextStyle(fontSize: 14.sp)),
                         selected: selectedCategory == category,
                         onSelected: (selected) {
                           setState(() {
@@ -469,12 +475,12 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
+                  SizedBox(height: 20.h),
+                  Text(
                     'Date Range',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   Row(
                     children: [
                       Expanded(
@@ -482,30 +488,30 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                           onPressed: () {
                             // Show date picker for start date
                           },
-                          child: const Text('Start Date'),
+                          child: Text('Start Date', style: TextStyle(fontSize: 14.sp)),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10.w),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
                             // Show date picker for end date
                           },
-                          child: const Text('End Date'),
+                          child: Text('End Date', style: TextStyle(fontSize: 14.sp)),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   Row(
                     children: [
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Cancel'),
+                          child: Text('Cancel', style: TextStyle(fontSize: 14.sp)),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10.w),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
@@ -515,15 +521,15 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
                               _filterAnnouncements();
                             });
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Filters applied'),
+                              SnackBar(
+                                content: Text('Filters applied', style: TextStyle(fontSize: 14.sp)),
                               ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(context).primaryColor,
                           ),
-                          child: const Text('Apply'),
+                          child: Text('Apply', style: TextStyle(fontSize: 14.sp)),
                         ),
                       ),
                     ],
@@ -542,57 +548,60 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(announcement['title']),
+          title: Text(announcement['title'], style: TextStyle(fontSize: 18.sp)),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10.w),
                   decoration: BoxDecoration(
                     color: announcement['tagColor'].withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
                     announcement['tag'],
                     style: TextStyle(
                       color: announcement['tagColor'],
                       fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                   child: CachedNetworkImage(
                     imageUrl: announcement['image'],
-                    height: 200,
+                    height: 200.h,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
                 Row(
                   children: [
                     Icon(
                       Icons.calendar_today,
-                      size: 16,
+                      size: 16.sp,
                       color: Colors.grey.shade600,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8.w),
                     Text(
                       announcement['date'],
                       style: TextStyle(
                         color: Colors.grey.shade600,
+                        fontSize: 14.sp,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
                 Text(
                   announcement['description'],
-                  style: const TextStyle(
+                  style: TextStyle(
                     height: 1.5,
+                    fontSize: 14.sp,
                   ),
                 ),
               ],
@@ -601,7 +610,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Close'),
+              child: Text('Close', style: TextStyle(fontSize: 14.sp)),
             ),
           ],
         );
@@ -612,7 +621,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
   void _shareAnnouncement(Map<String, dynamic> announcement) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Sharing "${announcement['title']}"'),
+        content: Text('Sharing "${announcement['title']}"', style: TextStyle(fontSize: 14.sp)),
       ),
     );
   }
@@ -620,7 +629,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
   void _bookmarkAnnouncement(Map<String, dynamic> announcement) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Bookmarking "${announcement['title']}"'),
+        content: Text('Bookmarking "${announcement['title']}"', style: TextStyle(fontSize: 14.sp)),
       ),
     );
   }
@@ -631,28 +640,28 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> with TickerPr
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
               color: Theme.of(context).cardTheme.color,
-              borderRadius: BorderRadius.circular(50),
+              borderRadius: BorderRadius.circular(50.r),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.notifications,
-              size: 50,
-              color: Color(0xFF006D77),
+              size: 50.sp,
+              color: const Color(0xFF006D77),
             ),
           ),
-          const SizedBox(height: 20),
-          const Text(
+          SizedBox(height: 20.h),
+          Text(
             'No announcements found',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
           Text(
             _searchController.text.isEmpty
                 ? 'There are no announcements in this category'
                 : 'No announcements match your search',
-            style: const TextStyle(color: Colors.grey),
+            style: TextStyle(color: Colors.grey, fontSize: 14.sp),
           ),
         ],
       ),

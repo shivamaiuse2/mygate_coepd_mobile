@@ -90,7 +90,7 @@ class ApprovalPendingScreen extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   context.read<AuthBloc>().add(LogoutRequested());
-                  Navigator.of(context).pushReplacementNamed('/auth');
+                  Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
                 },
                 child: const Text('Logout'),
               ),

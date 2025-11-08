@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -157,64 +158,54 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
         children: [
           // Tab bar
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.all(16.w),
             child: Row(
               children: [
                 Expanded(
-                  child: ScaleTransition(
-                    scale: _fadeAnimation,
-                    child: ElevatedButton(
-                      onPressed: () => setState(() => _currentIndex = 0),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _currentIndex == 0
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).cardTheme.color,
-                        foregroundColor: _currentIndex == 0
-                            ? Colors.white
-                            : Theme.of(context).textTheme.bodyLarge?.color,
+                  child: ElevatedButton(
+                    onPressed: () => setState(() => _currentIndex = 0),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _currentIndex == 0
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).cardTheme.color,
+                      foregroundColor: _currentIndex == 0
+                          ? Colors.white
+                          : Theme.of(context).textTheme.bodyLarge?.color,
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: const Text('Feed'),
                     ),
+                    child: Text('Feed', style: TextStyle(fontSize: 16.sp)),
                   ),
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: 10.w),
                 Expanded(
-                  child: ScaleTransition(
-                    scale: _fadeAnimation,
-                    child: ElevatedButton(
-                      onPressed: () => setState(() => _currentIndex = 1),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _currentIndex == 1
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).cardTheme.color,
-                        foregroundColor: _currentIndex == 1
-                            ? Colors.white
-                            : Theme.of(context).textTheme.bodyLarge?.color,
+                  child: ElevatedButton(
+                    onPressed: () => setState(() => _currentIndex = 1),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _currentIndex == 1
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).cardTheme.color,
+                      foregroundColor: _currentIndex == 1
+                          ? Colors.white
+                          : Theme.of(context).textTheme.bodyLarge?.color,
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: const Text('Marketplace'),
                     ),
+                    child: Text('Marketplace', style: TextStyle(fontSize: 16.sp)),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
           // Content based on selected tab
           Expanded(
             child: _currentIndex == 0 ? _buildFeed() : _buildMarketplace(),
           ),
         ],
-      ),
-      floatingActionButton: ScaleTransition(
-        scale: _fadeAnimation,
-        child: FloatingActionButton(
-          onPressed: () {
-            // Create new post
-            _showCreatePostDialog();
-          },
-          backgroundColor: Theme.of(context).primaryColor,
-          child: const Icon(Icons.add),
-        ),
       ),
     );
   }
@@ -223,7 +214,7 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
     return _filteredPosts.isEmpty
         ? _buildEmptyFeedState()
         : ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             itemCount: _filteredPosts.length,
             itemBuilder: (context, index) {
               final post = _filteredPosts[index];
@@ -239,9 +230,9 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                   ),
                 ),
                 child: Card(
-                  margin: const EdgeInsets.only(bottom: 16),
+                  margin: EdgeInsets.only(bottom: 16.h),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
                   elevation: 3,
                   child: Container(
@@ -254,14 +245,14 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                           Theme.of(context).cardTheme.color!.withValues(alpha: 0.95),
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // User info with gradient background
                         Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
@@ -271,41 +262,42 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                                 Theme.of(context).primaryColor.withValues(alpha: 0.05),
                               ],
                             ),
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(16),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(16.r),
                             ),
                           ),
                           child: Row(
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
+                                  borderRadius: BorderRadius.circular(25.r),
                                   border: Border.all(
                                     color: Theme.of(context).primaryColor,
-                                    width: 2,
+                                    width: 2.w,
                                   ),
                                 ),
                                 child: CircleAvatar(
-                                  radius: 20,
+                                  radius: 20.r,
                                   backgroundImage:
                                       CachedNetworkImageProvider(post['user']['avatar']),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12.w),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       post['user']['name'],
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
+                                        fontSize: 16.sp,
                                       ),
                                     ),
                                     Text(
                                       post['user']['unit'],
-                                      style: const TextStyle(
-                                        fontSize: 12,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
                                         color: Colors.grey,
                                       ),
                                     ),
@@ -313,18 +305,18 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 5,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 5.h,
                                 ),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 child: Text(
                                   post['time'],
-                                  style: const TextStyle(
-                                    fontSize: 12,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -334,100 +326,93 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                         ),
                         // Post content
                         Padding(
-                          padding: const EdgeInsets.all(16),
+                          padding: EdgeInsets.all(16.w),
                           child: Text(
                             post['content'],
-                            style: const TextStyle(
-                              fontSize: 14,
+                            style: TextStyle(
+                              fontSize: 14.sp,
                             ),
                           ),
                         ),
                         // Post image
                         if (post['image'] != null)
                           Container(
-                            height: 200,
+                            height: 200.h,
                             width: double.infinity,
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            margin: EdgeInsets.symmetric(horizontal: 16.w),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(12.r),
                               image: DecorationImage(
                                 image: CachedNetworkImageProvider(post['image']),
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                        const SizedBox(height: 16),
-                        // Actions with visual enhancements
+                        SizedBox(height: 16.h),
+                        // Post actions
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(8),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 12.w,
+                                  vertical: 8.h,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: Colors.blue.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.grey.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(20.r),
                                 ),
                                 child: Row(
                                   children: [
                                     Icon(
                                       Icons.thumb_up,
-                                      size: 18,
-                                      color: Colors.blue,
+                                      size: 16.sp,
+                                      color: Colors.grey,
                                     ),
-                                    const SizedBox(width: 4),
+                                    SizedBox(width: 4.w),
                                     Text(
                                       '${post['likes']}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.blue,
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Colors.grey,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 16.w),
                               Container(
-                                padding: const EdgeInsets.all(8),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 12.w,
+                                  vertical: 8.h,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: Colors.green.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.grey.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(20.r),
                                 ),
                                 child: Row(
                                   children: [
                                     Icon(
                                       Icons.comment,
-                                      size: 18,
-                                      color: Colors.green,
+                                      size: 16.sp,
+                                      color: Colors.grey,
                                     ),
-                                    const SizedBox(width: 4),
+                                    SizedBox(width: 4.w),
                                     Text(
                                       '${post['comments']}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.green,
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Colors.grey,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              const Spacer(),
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Icon(
-                                  Icons.share,
-                                  size: 18,
-                                  color: Colors.grey,
-                                ),
-                              ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.h),
                       ],
                     ),
                   ),
@@ -441,11 +426,11 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
     return _filteredMarketplaceItems.isEmpty
         ? _buildEmptyMarketplaceState()
         : GridView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
+              crossAxisSpacing: 16.w,
+              mainAxisSpacing: 16.h,
               childAspectRatio: 0.8,
             ),
             itemCount: _filteredMarketplaceItems.length,
@@ -464,7 +449,7 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                 ),
                 child: Card(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -473,8 +458,8 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(16),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(16.r),
                             ),
                             image: DecorationImage(
                               image: CachedNetworkImageProvider(item['image']),
@@ -485,32 +470,33 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                       ),
                       // Item details
                       Padding(
-                        padding: const EdgeInsets.all(12),
+                        padding: EdgeInsets.all(12.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               item['title'],
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: 14.sp,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4.h),
                             Text(
                               item['price'],
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF006D77),
+                                color: const Color(0xFF006D77),
+                                fontSize: 16.sp,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4.h),
                             Text(
                               '${item['user']} • ${item['unit']}',
-                              style: const TextStyle(
-                                fontSize: 12,
+                              style: TextStyle(
+                                fontSize: 12.sp,
                                 color: Colors.grey,
                               ),
                             ),
@@ -577,8 +563,8 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
   }
 
   void _showCreatePostDialog() {
-    final TextEditingController _postController = TextEditingController();
-    final TextEditingController _titleController = TextEditingController();
+    final TextEditingController postController = TextEditingController();
+    final TextEditingController titleController = TextEditingController();
     
     showModalBottomSheet(
       context: context,
@@ -614,7 +600,7 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    controller: _titleController,
+                    controller: titleController,
                     decoration: const InputDecoration(
                       hintText: 'Post title (optional)',
                       border: OutlineInputBorder(
@@ -624,7 +610,7 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                   ),
                   const SizedBox(height: 16),
                   TextField(
-                    controller: _postController,
+                    controller: postController,
                     maxLines: 3,
                     decoration: const InputDecoration(
                       hintText: 'What would you like to share with the community?',
@@ -644,11 +630,11 @@ class _CommunityScreenState extends State<CommunityScreen> with TickerProviderSt
                       const SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {
-                          if (_postController.text.trim().isNotEmpty) {
+                          if (postController.text.trim().isNotEmpty) {
                             Navigator.of(context).pop();
                             _createPost(
-                              _titleController.text.trim(),
-                              _postController.text.trim(),
+                              titleController.text.trim(),
+                              postController.text.trim(),
                             );
                           }
                         },

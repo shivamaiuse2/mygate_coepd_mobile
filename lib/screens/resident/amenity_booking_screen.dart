@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AmenityBookingScreen extends StatefulWidget {
   const AmenityBookingScreen({super.key});
@@ -11,8 +12,8 @@ class AmenityBookingScreen extends StatefulWidget {
 class _AmenityBookingScreenState extends State<AmenityBookingScreen> with TickerProviderStateMixin {
   String _selectedDate = '2023-05-15';
   String _selectedTime = '18:00';
-  int _selectedAmenity = 0;
-  TextEditingController _searchController = TextEditingController();
+  int _selectedAmenityId = 1; // Use ID instead of index
+  final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _filteredAmenities = [];
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -83,6 +84,7 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
   void initState() {
     super.initState();
     _filteredAmenities = _amenities;
+    _selectedAmenityId = _amenities.isNotEmpty ? _amenities[0]['id'] : 1; // Set initial ID
     _searchController.addListener(_filterAmenities);
     
     _animationController = AnimationController(
@@ -125,12 +127,12 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Amenity Booking'),
+        title: Text('Amenity Booking', style: TextStyle(fontSize: 18.sp)),
         actions: [
           ScaleTransition(
             scale: _fadeAnimation,
             child: IconButton(
-              icon: const Icon(Icons.search),
+              icon: Icon(Icons.search, size: 24.sp),
               onPressed: _showSearchBar,
             ),
           ),
@@ -138,7 +140,7 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -146,15 +148,15 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Select Amenity',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   _filteredAmenities.isEmpty
                       ? _buildEmptyState()
                       : SizedBox(
-                          height: 200,
+                          height: 200.h,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: _filteredAmenities.length,
@@ -172,21 +174,21 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
                                   ),
                                 ),
                                 child: GestureDetector(
-                                  onTap: () => setState(() => _selectedAmenity = index),
+                                  onTap: () => setState(() => _selectedAmenityId = amenity['id']),
                                   child: Container(
-                                    width: 150,
-                                    margin: const EdgeInsets.only(right: 16),
+                                    width: 150.w,
+                                    margin: EdgeInsets.only(right: 16.w),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(16.r),
                                       border: Border.all(
-                                        color: _selectedAmenity == index
+                                        color: _selectedAmenityId == amenity['id']
                                             ? Theme.of(context).primaryColor
                                             : Colors.transparent,
-                                        width: 2,
+                                        width: 2.w,
                                       ),
                                     ),
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(16.r),
                                       child: Stack(
                                         fit: StackFit.expand,
                                         children: [
@@ -207,15 +209,15 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
                                             ),
                                           ),
                                           Positioned(
-                                            bottom: 10,
-                                            left: 10,
-                                            right: 10,
+                                            bottom: 10.h,
+                                            left: 10.w,
+                                            right: 10.w,
                                             child: Text(
                                               amenity['name'],
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 16,
+                                                fontSize: 16.sp,
                                               ),
                                             ),
                                           ),
@@ -231,7 +233,7 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
                 ],
               ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
 
               // Amenity Details
               if (_filteredAmenities.isNotEmpty)
@@ -244,50 +246,50 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
                   ),
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardTheme.color,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _filteredAmenities[_selectedAmenity]['name'],
-                          style: const TextStyle(
-                            fontSize: 20,
+                          _getSelectedAmenity()['name'],
+                          style: TextStyle(
+                            fontSize: 20.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8.h),
                         Text(
-                          _filteredAmenities[_selectedAmenity]['description'],
+                          _getSelectedAmenity()['description'],
                           maxLines: 5,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: Colors.grey),
+                          style: TextStyle(color: Colors.grey, fontSize: 14.sp),
                         ),
                       ],
                     ),
                   ),
                 ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
 
               // Date Selection
               if (_filteredAmenities.isNotEmpty)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Select Date',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     Container(
-                      height: 60,
+                      height: 60.h,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).cardTheme.color,
-                        borderRadius: BorderRadius.circular(16),
+                        // color: Theme.of(context).cardTheme.color,
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -316,20 +318,21 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
                                     '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
                               }),
                               child: Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 10,
+                                margin: EdgeInsets.only(right: 10.w),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20.w,
+                                  vertical: 10.h,
                                 ),
                                 decoration: BoxDecoration(
                                   color: isSelected
                                       ? Theme.of(context).primaryColor
                                       : Theme.of(context).cardTheme.color,
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(12.r),
                                   border: Border.all(
                                     color: isSelected
                                         ? Theme.of(context).primaryColor
                                         : Colors.grey.withValues(alpha: 0.3),
+                                    width: 1.w,
                                   ),
                                 ),
                                 child: Column(
@@ -346,6 +349,7 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
                                         fontWeight: isSelected
                                             ? FontWeight.bold
                                             : FontWeight.normal,
+                                        fontSize: 14.sp,
                                       ),
                                     ),
                                   ],
@@ -359,12 +363,80 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
                   ],
                 ),
 
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
 
               // Time Selection
-              if (_filteredAmenities.isNotEmpty) _buildTimeSlots(),
+              if (_filteredAmenities.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Select Time Slot',
+                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 16.h),
+                    Wrap(
+                      spacing: 10.w,
+                      runSpacing: 10.h,
+                      children: _getSelectedAmenity()['availableSlots']
+                          .asMap()
+                          .entries
+                          .map<Widget>((entry) {
+                            final index = entry.key;
+                            final slot = entry.value;
+                            final isSelected = _selectedTime == slot;
+                            return ScaleTransition(
+                              scale: Tween<double>(begin: 0.9, end: 1.0).animate(
+                                CurvedAnimation(
+                                  parent: _animationController,
+                                  curve: Interval(
+                                    0.05 * index,
+                                    0.25 + (0.05 * index),
+                                    curve: Curves.elasticOut,
+                                  ),
+                                ),
+                              ),
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedTime = slot),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 20.w,
+                                    vertical: 10.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.grey.withValues(alpha: 0.5),
+                                      width: 1.5.w,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    slot,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Theme.of(context).textTheme.bodyLarge?.color,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          })
+                          .toList(),
+                    ),
+                  ],
+                ),
 
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
               // Book Button
               if (_filteredAmenities.isNotEmpty)
                 ScaleTransition(
@@ -380,19 +452,19 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
                       onPressed: _confirmBooking,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF006D77),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Book Amenity',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
                 ),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
             ],
           ),
         ),
@@ -404,16 +476,16 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (context) {
         return Container(
           padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 16,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+            left: 16.w,
+            right: 16.w,
+            top: 16.h,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 16.h,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -421,15 +493,15 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
               TextField(
                 controller: _searchController,
                 autofocus: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Search amenities...',
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: Icon(Icons.search, size: 24.sp),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    borderRadius: BorderRadius.all(Radius.circular(12.r)),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -437,7 +509,7 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF006D77),
                   ),
-                  child: const Text('Search'),
+                  child: Text('Search', style: TextStyle(fontSize: 16.sp)),
                 ),
               ),
             ],
@@ -447,7 +519,16 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
     );
   }
 
-
+  Map<String, dynamic> _getSelectedAmenity() {
+    // Find the amenity with the selected ID
+    for (var amenity in _filteredAmenities) {
+      if (amenity['id'] == _selectedAmenityId) {
+        return amenity;
+      }
+    }
+    // If not found, return the first amenity or an empty map
+    return _filteredAmenities.isNotEmpty ? _filteredAmenities[0] : {};
+  }
 
   String _formatSelectedDate() {
     final date = DateTime.parse(_selectedDate);
@@ -455,28 +536,28 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
   }
 
   void _confirmBooking() {
-    final selectedAmenity = _filteredAmenities[_selectedAmenity];
+    final selectedAmenity = _getSelectedAmenity();
     
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirm Amenity Booking'),
+          title: Text('Confirm Amenity Booking', style: TextStyle(fontSize: 18.sp)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Amenity: ${selectedAmenity['name']}'),
-              Text('Date: ${_formatSelectedDate()}'),
-              Text('Time: $_selectedTime'),
-              const SizedBox(height: 16),
-              const Text('Please confirm to proceed with booking'),
+              Text('Amenity: ${selectedAmenity['name']}', style: TextStyle(fontSize: 16.sp)),
+              Text('Date: ${_formatSelectedDate()}', style: TextStyle(fontSize: 16.sp)),
+              Text('Time: $_selectedTime', style: TextStyle(fontSize: 16.sp)),
+              SizedBox(height: 16.h),
+              Text('Please confirm to proceed with booking', style: TextStyle(fontSize: 14.sp)),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(fontSize: 14.sp)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -487,7 +568,7 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColor,
               ),
-              child: const Text('Confirm'),
+              child: Text('Confirm', style: TextStyle(fontSize: 14.sp)),
             ),
           ],
         );
@@ -496,7 +577,7 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
   }
 
   void _completeBooking() {
-    final selectedAmenity = _filteredAmenities[_selectedAmenity];
+    final selectedAmenity = _getSelectedAmenity();
     
     // Show booking processing
     showDialog(
@@ -508,8 +589,8 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
             mainAxisSize: MainAxisSize.min,
             children: [
               const CircularProgressIndicator(),
-              const SizedBox(height: 20),
-              const Text('Processing booking...'),
+              SizedBox(height: 20.h),
+              Text('Processing booking...', style: TextStyle(fontSize: 16.sp)),
             ],
           ),
         );
@@ -524,7 +605,8 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Booking confirmed for ${selectedAmenity['name']} on ${_formatSelectedDate()} at $_selectedTime'),
+              'Booking confirmed for ${selectedAmenity['name']} on ${_formatSelectedDate()} at $_selectedTime',
+              style: TextStyle(fontSize: 14.sp)),
           backgroundColor: Colors.green,
         ),
       );
@@ -543,110 +625,32 @@ class _AmenityBookingScreenState extends State<AmenityBookingScreen> with Ticker
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
               color: Theme.of(context).cardTheme.color,
-              borderRadius: BorderRadius.circular(50),
+              borderRadius: BorderRadius.circular(50.r),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.sports_tennis,
-              size: 50,
-              color: Color(0xFF006D77),
+              size: 50.sp,
+              color: const Color(0xFF006D77),
             ),
           ),
-          const SizedBox(height: 20),
-          const Text(
+          SizedBox(height: 20.h),
+          Text(
             'No amenities found',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
           Text(
             _searchController.text.isEmpty
                 ? 'There are no amenities available'
                 : 'No amenities match your search',
-            style: const TextStyle(color: Colors.grey),
+            style: TextStyle(color: Colors.grey, fontSize: 14.sp),
             textAlign: TextAlign.center,
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildTimeSlots() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Select Time Slot',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardTheme.color,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: Colors.grey.withValues(alpha: 0.2),
-            ),
-          ),
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: _filteredAmenities[_selectedAmenity]['availableSlots']
-                .asMap()
-                .entries
-                .map((entry) {
-                  final index = entry.key;
-                  final slot = entry.value;
-                  final isSelected = _selectedTime == slot;
-                  return ScaleTransition(
-                    scale: Tween<double>(begin: 0.9, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: _animationController,
-                        curve: Interval(
-                          0.05 * index,
-                          0.25 + (0.05 * index),
-                          curve: Curves.elasticOut,
-                        ),
-                      ),
-                    ),
-                    child: GestureDetector(
-                      onTap: () => setState(() => _selectedTime = slot),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? Theme.of(context).primaryColor
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: isSelected
-                                ? Theme.of(context).primaryColor
-                                : Colors.grey.withValues(alpha: 0.5),
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Text(
-                          slot,
-                          style: TextStyle(
-                            color: isSelected
-                                ? Colors.white
-                                : Theme.of(context).textTheme.bodyLarge?.color,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                })
-                .toList(),
-          ),
-        ),
-      ],
     );
   }
 }

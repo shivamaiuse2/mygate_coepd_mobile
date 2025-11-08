@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
+import 'package:mygate_coepd/blocs/auth/auth_event.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
 import 'package:mygate_coepd/models/user.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mygate_coepd/screens/resident/dashboard_screen.dart';
 import 'package:mygate_coepd/screens/resident/visitor_management_screen.dart';
 import 'package:mygate_coepd/screens/resident/service_requests_screen.dart';
@@ -11,18 +12,21 @@ import 'package:mygate_coepd/screens/resident/bills_payments_screen.dart';
 import 'package:mygate_coepd/screens/resident/community_screen.dart';
 
 class ResidentMainScreen extends StatefulWidget {
-  const ResidentMainScreen({super.key});
+  final int initialTabIndex;
+
+  const ResidentMainScreen({super.key, this.initialTabIndex = 0});
 
   @override
   State<ResidentMainScreen> createState() => _ResidentMainScreenState();
 }
 
-class _ResidentMainScreenState extends State<ResidentMainScreen> with TickerProviderStateMixin {
+class _ResidentMainScreenState extends State<ResidentMainScreen>
+    with TickerProviderStateMixin {
   int _currentIndex = 0;
   late AnimationController _animationController;
   late Animation<double> _animation;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  
+
   final List<Widget> _screens = [
     const ResidentDashboardScreen(),
     const VisitorManagementScreen(),
@@ -67,22 +71,28 @@ class _ResidentMainScreenState extends State<ResidentMainScreen> with TickerProv
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.initialTabIndex;
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    
+
     _animation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _animationController.forward();
+    });
   }
 
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
-    _animationController.forward(from: 0.0);
+    _animationController.reset();
+    _animationController.forward();
   }
 
   @override
@@ -96,7 +106,6 @@ class _ResidentMainScreenState extends State<ResidentMainScreen> with TickerProv
     final theme = Theme.of(context);
     final primaryColor = theme.primaryColor;
 
-    // Ensure index doesn't exceed the number of screens
     if (_currentIndex >= _screens.length) {
       _currentIndex = _screens.length - 1;
     }
@@ -111,9 +120,7 @@ class _ResidentMainScreenState extends State<ResidentMainScreen> with TickerProv
               title: Text(_navItems[_currentIndex].label),
               leading: IconButton(
                 icon: const Icon(Icons.menu),
-                onPressed: () {
-                  _scaffoldKey.currentState?.openDrawer();
-                },
+                onPressed: () => _scaffoldKey.currentState?.openDrawer(),
               ),
               actions: _buildAppBarActions(user),
             ),
@@ -122,35 +129,39 @@ class _ResidentMainScreenState extends State<ResidentMainScreen> with TickerProv
             bottomNavigationBar: _buildPremiumNavigationBar(theme, primaryColor),
           );
         }
+
+        // Loading State
         return Scaffold(
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 60,
-                  height: 60,
+                  width: 60.w,
+                  height: 60.w,
                   child: Stack(
                     children: [
                       CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
-                        strokeWidth: 3,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(theme.primaryColor),
+                        strokeWidth: 4.w,
                       ),
                       Center(
                         child: Icon(
                           Icons.security_rounded,
                           color: theme.primaryColor,
-                          size: 24,
+                          size: 28.sp,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
                 Text(
                   'Loading...',
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: Colors.grey.shade600,
+                    fontSize: 16.sp,
                   ),
                 ),
               ],
@@ -161,7 +172,7 @@ class _ResidentMainScreenState extends State<ResidentMainScreen> with TickerProv
     );
   }
 
-  Widget _buildDrawer(BuildContext context, user) {
+  Widget _buildDrawer(BuildContext context, User user) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -175,150 +186,103 @@ class _ResidentMainScreenState extends State<ResidentMainScreen> with TickerProv
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CircleAvatar(
-                  radius: 30,
+                  radius: 36.r,
                   backgroundImage: user.profileImage != null
                       ? NetworkImage(user.profileImage!)
                       : null,
                   child: user.profileImage == null
-                      ? const Icon(
-                          Icons.person,
-                          color: Colors.white,
-                        )
+                      ? Icon(Icons.person, size: 40.sp, color: Colors.white)
                       : null,
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 12.h),
                 Text(
                   user.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 5),
-                const Text(
+                SizedBox(height: 6.h),
+                Text(
                   'Resident',
                   style: TextStyle(
                     color: Colors.white70,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
               ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text('Home'),
-            selected: _currentIndex == 0,
-            onTap: () {
-              Navigator.pop(context);
-              _onTabTapped(0);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.people),
-            title: const Text('Visitors'),
-            selected: _currentIndex == 1,
-            onTap: () {
-              Navigator.pop(context);
-              _onTabTapped(1);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.checklist),
-            title: const Text('Services'),
-            selected: _currentIndex == 2,
-            onTap: () {
-              Navigator.pop(context);
-              _onTabTapped(2);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.account_balance_wallet),
-            title: const Text('Bills & Payments'),
-            selected: _currentIndex == 3,
-            onTap: () {
-              Navigator.pop(context);
-              _onTabTapped(3);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.groups),
-            title: const Text('Community'),
-            selected: _currentIndex == 4,
-            onTap: () {
-              Navigator.pop(context);
-              _onTabTapped(4);
-            },
-          ),
+          _drawerTile(Icons.home, 'Home', 0),
+          _drawerTile(Icons.people, 'Visitors', 1),
+          _drawerTile(Icons.checklist, 'Services', 2),
+          _drawerTile(Icons.account_balance_wallet, 'Bills & Payments', 3),
+          _drawerTile(Icons.groups, 'Community', 4),
           const Divider(),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              Navigator.pop(context);
-              // Navigate to settings screen
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Settings screen will be implemented'),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.help),
-            title: const Text('Help & Support'),
-            onTap: () {
-              Navigator.pop(context);
-              _showHelpDialog(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
-            onTap: () {
-              Navigator.pop(context);
-              _showLogoutConfirmation(context);
-            },
-          ),
+          _drawerTile(Icons.settings, 'Settings', null, onTap: () {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Settings screen will be implemented')),
+            );
+          }),
+          _drawerTile(Icons.help, 'Help & Support', null, onTap: () {
+            Navigator.pop(context);
+            _showHelpDialog(context);
+          }),
+          _drawerTile(Icons.logout, 'Logout', null, onTap: () {
+            Navigator.pop(context);
+            _showLogoutConfirmation(context);
+          }),
         ],
       ),
+    );
+  }
+
+  ListTile _drawerTile(IconData icon, String title, int? index,
+      {VoidCallback? onTap}) {
+    return ListTile(
+      leading: Icon(icon, size: 26.sp),
+      title: Text(title, style: TextStyle(fontSize: 15.sp)),
+      selected: index != null && _currentIndex == index,
+      selectedTileColor: Colors.grey.withValues(alpha: 0.1),
+      onTap: onTap ??
+          () {
+            Navigator.pop(context);
+            if (index != null) _onTabTapped(index);
+          },
     );
   }
 
   Widget _buildPremiumNavigationBar(ThemeData theme, Color primaryColor) {
     return Container(
       decoration: BoxDecoration(
-        // color: Colors.white,
         color: theme.bottomNavigationBarTheme.backgroundColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.15),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
-            spreadRadius: 0,
+            blurRadius: 20.r,
+            offset: Offset(0, -5.h),
           ),
         ],
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
         ),
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
         ),
         child: Container(
-          height: 80 + MediaQuery.of(context).padding.bottom,
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).padding.bottom,
-          ),
+          height: 80.h + MediaQuery.of(context).padding.bottom,
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
           child: Row(
             children: List.generate(_navItems.length, (index) {
               final item = _navItems[index];
               final isSelected = _currentIndex == index;
-              
+
               return Expanded(
                 child: _BuildAnimatedNavItem(
                   animation: _animation,
@@ -336,157 +300,148 @@ class _ResidentMainScreenState extends State<ResidentMainScreen> with TickerProv
   }
 
   List<Widget> _buildAppBarActions(User user) {
-    // Add specific actions based on the current screen
     switch (_currentIndex) {
-      case 0: // Home/Dashboard
+      case 0:
         return [
           IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/announcements');
-            },
-            icon: const Icon(Icons.notifications),
+            onPressed: () => Navigator.pushNamed(context, '/announcements'),
+            icon: Icon(Icons.notifications, size: 26.sp),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12.w),
           GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, '/profile');
-            },
+            onTap: () => Navigator.pushNamed(context, '/profile'),
             child: CircleAvatar(
+              radius: 18.r,
               backgroundImage: user.profileImage != null
                   ? NetworkImage(user.profileImage!)
                   : null,
               child: user.profileImage == null
-                  ? Icon(
-                      Icons.person,
-                      color: Theme.of(context).primaryColor,
-                    )
+                  ? Icon(Icons.person, size: 20.sp, color: Theme.of(context).primaryColor)
                   : null,
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16.w),
         ];
-      case 1: // Visitors
+      case 1:
         return [
           IconButton(
-            icon: const Icon(Icons.qr_code_scanner),
+            icon: Icon(Icons.qr_code_scanner, size: 26.sp),
             onPressed: () {
-              // Show QR scanner
-              // We need to access the visitor screen's method
-              if (_screens[_currentIndex] is VisitorManagementScreen) {
-                // This would require a different approach to access the method
-              }
-            },
-          ),
-        ];
-      case 2: // Services
-        return [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // Show search
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('QR Scanner would open here')),
+              );
             },
           ),
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: Icon(Icons.search, size: 26.sp),
             onPressed: () {
-              // Show filters
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Search functionality would open here')),
+              );
             },
           ),
         ];
-      case 3: // Bills
+      case 2:
+      case 3:
         return [
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: Icon(Icons.search, size: 26.sp),
             onPressed: () {
-              // Show search
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Search functionality would open here')),
+              );
             },
           ),
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: Icon(Icons.filter_list, size: 26.sp),
             onPressed: () {
-              // Show filters
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Filter functionality would open here')),
+              );
             },
           ),
         ];
-      case 4: // Community
+      case 4:
         return [
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: Icon(Icons.search, size: 26.sp),
             onPressed: () {
-              // Show search
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Search functionality would open here')),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.add, size: 28.sp),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Create post functionality would open here')),
+              );
             },
           ),
         ];
       default:
-        return [];
+        return [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, '/announcements'),
+            icon: Icon(Icons.notifications, size: 26.sp),
+          ),
+        ];
     }
   }
 
   void _showHelpDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Help & Support'),
-          content: const SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Text('CommunityLink App Help'),
-                SizedBox(height: 10),
-                Text('For technical support, please contact:'),
-                Text('support@communitylink.com'),
-                SizedBox(height: 10),
-                Text('For general inquiries, please contact:'),
-                Text('info@communitylink.com'),
-                SizedBox(height: 10),
-                Text('Phone: +91 9876543210'),
-              ],
-            ),
+      builder: (_) => AlertDialog(
+        title: Text('Help & Support', style: TextStyle(fontSize: 18.sp)),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('CommunityLink App Help', style: TextStyle(fontSize: 15.sp)),
+              SizedBox(height: 12.h),
+              Text('For technical support, please contact:', style: TextStyle(fontSize: 14.sp)),
+              Text('support@communitylink.com', style: TextStyle(fontSize: 14.sp)),
+              SizedBox(height: 12.h),
+              Text('For general inquiries, please contact:', style: TextStyle(fontSize: 14.sp)),
+              Text('info@communitylink.com', style: TextStyle(fontSize: 14.sp)),
+              SizedBox(height: 12.h),
+              Text('Phone: +91 9876543210', style: TextStyle(fontSize: 14.sp)),
+            ],
           ),
-          actions: [
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+        ),
+        actions: [
+          TextButton(
+            child: Text('OK', style: TextStyle(fontSize: 15.sp)),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
     );
   }
 
   void _showLogoutConfirmation(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Logout'),
-          content: const Text('Are you sure you want to logout?'),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Logout'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Perform logout
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Logged out successfully'),
-                  ),
-                );
-                // Navigate to login screen
-                Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
-              },
-            ),
-          ],
-        );
-      },
+      builder: (_) => AlertDialog(
+        title: Text('Logout', style: TextStyle(fontSize: 18.sp)),
+        content: Text('Are you sure you want to logout?', style: TextStyle(fontSize: 15.sp)),
+        actions: [
+          TextButton(
+            child: Text('Cancel', style: TextStyle(fontSize: 15.sp)),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          TextButton(
+            child: Text('Logout', style: TextStyle(fontSize: 15.sp, color: Colors.red)),
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.read<AuthBloc>().add(LogoutRequested());
+              Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -529,21 +484,19 @@ class _BuildAnimatedNavItem extends StatelessWidget {
         splashColor: primaryColor.withValues(alpha: 0.1),
         highlightColor: primaryColor.withValues(alpha: 0.05),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: 8.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Icon with animation
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Background highlight for selected item
                   if (isSelected)
                     ScaleTransition(
                       scale: animation,
                       child: Container(
-                        width: 40,
-                        height: 40,
+                        width: 44.w,
+                        height: 44.w,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
@@ -553,75 +506,66 @@ class _BuildAnimatedNavItem extends StatelessWidget {
                               primaryColor.withValues(alpha: 0.05),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
                       ),
                     ),
-                  
-                  // Icon
                   Icon(
                     isSelected ? item.activeIcon : item.icon,
-                    size: isSelected ? 26 : 24,
+                    size: isSelected ? 28.sp : 26.sp,
                     color: isSelected ? primaryColor : Colors.grey.shade600,
                   ),
-                  
-                  // Badge
                   if (item.badgeCount > 0)
                     Positioned(
-                      right: 0,
-                      top: -5,
+                      right: -2.w,
+                      top: -4.h,
                       child: Container(
-                        padding: const EdgeInsets.all(4),
+                        padding: EdgeInsets.all(4.w),
                         decoration: BoxDecoration(
                           color: Colors.red,
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2),
+                          border: Border.all(color: Colors.white, width: 2.w),
                         ),
-                        constraints: const BoxConstraints(
-                          minWidth: 16,
-                          minHeight: 16,
+                        constraints: BoxConstraints(
+                          minWidth: 18.w,
+                          minHeight: 18.w,
                         ),
                         child: Text(
                           item.badgeCount.toString(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 10,
+                            fontSize: 10.sp,
                             fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.center,
                         ),
                       ),
                     ),
-                  
-                  // Active indicator dot
                   if (isSelected)
                     Positioned(
-                      top: -1,
+                      top: -2.h,
                       child: ScaleTransition(
                         scale: animation,
                         child: Container(
-                          width: 20,
-                          height: 4,
+                          width: 24.w,
+                          height: 5.h,
                           decoration: BoxDecoration(
                             color: primaryColor,
-                            // shape: BoxShape.circle,
+                            borderRadius: BorderRadius.circular(2.r),
                           ),
                         ),
                       ),
                     ),
                 ],
               ),
-              
-              const SizedBox(height: 2),
-              
-              // Label with animation
+              SizedBox(height: 4.h),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 transform: Matrix4.identity()..scale(isSelected ? 1.0 : 0.9),
                 child: Text(
                   item.label,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color: isSelected ? primaryColor : Colors.grey.shade600,
                     letterSpacing: isSelected ? 0.5 : 0.0,

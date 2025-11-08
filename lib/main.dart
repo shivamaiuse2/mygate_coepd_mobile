@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,16 +39,40 @@ void main() async {
   runApp(const CommunityLinkApp());
 }
 
-class CommunityLinkApp extends StatelessWidget {
+class CommunityLinkApp extends StatefulWidget {
   const CommunityLinkApp({super.key});
-  
+
+  @override
+  State<CommunityLinkApp> createState() => _CommunityLinkAppState();
+}
+
+class _CommunityLinkAppState extends State<CommunityLinkApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    // This will trigger a rebuild when the system theme changes
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
+    log("Log Screen size: $screenWidth x $screenHeight");
     return ScreenUtilInit(
-      // designSize: ,
+      designSize: const Size(375, 812), // Standard/common mobile device size
+      // designSize: Size(screenWidth, screenHeight), // According to current device size
       minTextAdapt: true,
       splitScreenMode: true,
       child: RepositoryProvider(
@@ -77,6 +103,10 @@ class CommunityLinkApp extends StatelessWidget {
       '/role-selection': (context) => const RoleSelectionScreen(),
       '/auth': (context) => const AuthScreen(),
       '/resident-main': (context) => const ResidentMainScreen(),
+      '/resident-main/visitors': (context) => ResidentMainScreen(initialTabIndex: 1),
+      '/resident-main/services': (context) => ResidentMainScreen(initialTabIndex: 2),
+      '/resident-main/bills': (context) => ResidentMainScreen(initialTabIndex: 3),
+      '/resident-main/community': (context) => ResidentMainScreen(initialTabIndex: 4),
       '/guard-main': (context) => const GuardMainScreen(),
       '/admin-main': (context) => const AdminMainScreen(),
       '/visitors': (context) => const VisitorManagementScreen(),

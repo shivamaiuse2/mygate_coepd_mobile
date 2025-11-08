@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ServiceRequestsScreen extends StatefulWidget {
   const ServiceRequestsScreen({super.key});
@@ -10,7 +11,7 @@ class ServiceRequestsScreen extends StatefulWidget {
 
 class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with TickerProviderStateMixin {
   String _selectedTab = 'requests';
-  bool _showNewRequest = false;
+  final bool _showNewRequest = false;
   TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _filteredActiveRequests = [];
   List<Map<String, dynamic>> _filteredRequestHistory = [];
@@ -164,48 +165,112 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
         children: [
           // Tab Selection
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(16.w),
             child: Row(
               children: [
                 Expanded(
-                  child: ScaleTransition(
-                    scale: _fadeAnimation,
-                    child: ElevatedButton(
-                      onPressed: () => setState(() => _selectedTab = 'requests'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _selectedTab == 'requests'
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).cardTheme.color,
-                        foregroundColor: _selectedTab == 'requests'
-                            ? Colors.white
-                            : Theme.of(context).textTheme.bodyLarge?.color,
+                  child: ElevatedButton(
+                    onPressed: () => setState(() => _selectedTab = 'requests'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _selectedTab == 'requests'
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).cardTheme.color,
+                      foregroundColor: _selectedTab == 'requests'
+                          ? Colors.white
+                          : Theme.of(context).textTheme.bodyLarge?.color,
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: const Text('Active Requests'),
                     ),
+                    child: Text('Active Requests', style: TextStyle(fontSize: 16.sp)),
                   ),
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: 10.w),
                 Expanded(
-                  child: ScaleTransition(
-                    scale: _fadeAnimation,
-                    child: ElevatedButton(
-                      onPressed: () => setState(() => _selectedTab = 'history'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _selectedTab == 'history'
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).cardTheme.color,
-                        foregroundColor: _selectedTab == 'history'
-                            ? Colors.white
-                            : Theme.of(context).textTheme.bodyLarge?.color,
+                  child: ElevatedButton(
+                    onPressed: () => setState(() => _selectedTab = 'history'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _selectedTab == 'history'
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).cardTheme.color,
+                      foregroundColor: _selectedTab == 'history'
+                          ? Colors.white
+                          : Theme.of(context).textTheme.bodyLarge?.color,
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: const Text('History'),
                     ),
+                    child: Text('History', style: TextStyle(fontSize: 16.sp)),
                   ),
                 ),
               ],
             ),
           ),
-          // Content based on selected tab
+          // Search Bar
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardTheme.color,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search service requests...',
+                  prefixIcon: Icon(Icons.search, size: 24.sp),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(16.w),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 20.h),
+          // Service Categories
+          SizedBox(
+            height: 100.h,
+            child: ListView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              scrollDirection: Axis.horizontal,
+              itemCount: _serviceCategories.length,
+              itemBuilder: (context, index) {
+                final category = _serviceCategories[index];
+                return Container(
+                  width: 80.w,
+                  margin: EdgeInsets.only(right: 15.w),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(15.w),
+                        decoration: BoxDecoration(
+                          color: category['color'].withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        child: Icon(
+                          category['icon'],
+                          color: category['color'],
+                          size: 24.sp,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        category['name'],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 20.h),
+          // Requests List
           Expanded(
             child: _selectedTab == 'requests'
                 ? _buildActiveRequests()
@@ -213,13 +278,10 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
           ),
         ],
       ),
-      floatingActionButton: ScaleTransition(
-        scale: _fadeAnimation,
-        child: FloatingActionButton(
-          onPressed: () => _showNewRequestDialog(),
-          backgroundColor: const Color(0xFF006D77),
-          child: const Icon(Icons.add),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showNewRequestForm,
+        backgroundColor: Theme.of(context).primaryColor,
+        child: Icon(Icons.add, size: 24.sp),
       ),
     );
   }
@@ -228,7 +290,7 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
     return _filteredActiveRequests.isEmpty
         ? _buildEmptyState()
         : ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             itemCount: _filteredActiveRequests.length,
             itemBuilder: (context, index) {
               final request = _filteredActiveRequests[index];
@@ -244,9 +306,9 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
                   ),
                 ),
                 child: Card(
-                  margin: const EdgeInsets.only(bottom: 16),
+                  margin: EdgeInsets.only(bottom: 16.h),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
                   elevation: 4,
                   child: Container(
@@ -259,59 +321,61 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
                           Theme.of(context).cardTheme.color!.withValues(alpha: 0.95),
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(12),
+                                padding: EdgeInsets.all(12.w),
                                 decoration: BoxDecoration(
                                   color: _getServiceColor(request['category'])
                                       .withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(12.r),
                                   border: Border.all(
                                     color: _getServiceColor(request['category']).withValues(alpha: 0.3),
-                                    width: 1,
+                                    width: 1.w,
                                   ),
                                 ),
                                 child: Icon(
                                   _getServiceIcon(request['category']),
                                   color: _getServiceColor(request['category']),
-                                  size: 24,
+                                  size: 24.sp,
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: 12.w),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       request['title'],
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
+                                    SizedBox(height: 4.h),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 2,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w,
+                                        vertical: 4.h,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.grey.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(8),
+                                        color: _getServiceColor(request['category'])
+                                            .withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(12.r),
                                       ),
                                       child: Text(
                                         request['category'],
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: _getServiceColor(request['category']),
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ),
@@ -319,75 +383,68 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 5.h,
                                 ),
                                 decoration: BoxDecoration(
                                   color: _getStatusColor(request['status']),
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: _getStatusColor(request['status']).withValues(alpha: 0.3),
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
+                                  borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 child: Text(
                                   request['status'],
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.h),
                           Row(
                             children: [
                               Icon(
                                 Icons.calendar_today,
-                                size: 16,
+                                size: 16.sp,
                                 color: Colors.grey.shade600,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8.w),
                               Text(
                                 request['date'],
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                 ),
                               ),
-                              const SizedBox(width: 16),
+                              SizedBox(width: 20.w),
                               Icon(
                                 Icons.person,
-                                size: 16,
+                                size: 16.sp,
                                 color: Colors.grey.shade600,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8.w),
                               Text(
                                 request['assignedTo'],
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.h),
                           Text(
                             request['description'],
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.grey,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16.h),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -400,12 +457,13 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
                                     color: Theme.of(context).primaryColor,
                                   ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(12.r),
                                   ),
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                 ),
-                                child: const Text('View Details'),
+                                child: Text('View Details', style: TextStyle(fontSize: 14.sp)),
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8.w),
                               ElevatedButton(
                                 onPressed: () {
                                   _showEditRequestDialog(request);
@@ -413,10 +471,11 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Theme.of(context).primaryColor,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(12.r),
                                   ),
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                 ),
-                                child: const Text('Edit'),
+                                child: Text('Edit', style: TextStyle(fontSize: 14.sp)),
                               ),
                             ],
                           ),
@@ -434,7 +493,7 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
     return _filteredRequestHistory.isEmpty
         ? _buildEmptyHistoryState()
         : ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             itemCount: _filteredRequestHistory.length,
             itemBuilder: (context, index) {
               final request = _filteredRequestHistory[index];
@@ -450,105 +509,107 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
                   ),
                 ),
                 child: Card(
-                  margin: const EdgeInsets.only(bottom: 16),
+                  margin: EdgeInsets.only(bottom: 16.h),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10.w),
                               decoration: BoxDecoration(
                                 color: _getServiceColor(request['category'])
                                     .withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Icon(
                                 _getServiceIcon(request['category']),
                                 color: _getServiceColor(request['category']),
+                                size: 24.sp,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12.w),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     request['title'],
-                                    style: const TextStyle(
-                                      fontSize: 16,
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: 4.h),
                                   Text(
                                     request['category'],
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.grey,
+                                      fontSize: 14.sp,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 5.h,
                               ),
                               decoration: BoxDecoration(
                                 color: _getStatusColor(request['status']),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Text(
                                 request['status'],
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.info),
+                              icon: Icon(Icons.info, size: 24.sp),
                               onPressed: () {
                                 _showRequestDetails(request);
                               },
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.h),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.calendar_today,
-                              size: 16,
+                              size: 16.sp,
                               color: Colors.grey,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             Text(
                               request['date'],
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 14,
+                                fontSize: 14.sp,
                               ),
                             ),
-                            const SizedBox(width: 20),
-                            const Icon(
+                            SizedBox(width: 20.w),
+                            Icon(
                               Icons.person,
-                              size: 16,
+                              size: 16.sp,
                               color: Colors.grey,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8.w),
                             Text(
                               request['assignedTo'],
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 14,
+                                fontSize: 14.sp,
                               ),
                             ),
                           ],
@@ -1194,49 +1255,49 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return Container(
               padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 16,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+                left: 16.w,
+                right: 16.w,
+                top: 16.h,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 16.h,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     'Edit Service Request',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   TextField(
                     controller: TextEditingController(text: request['title']),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Request Title',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        borderRadius: BorderRadius.all(Radius.circular(12.r)),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Category',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        borderRadius: BorderRadius.all(Radius.circular(12.r)),
                       ),
                     ),
                     value: selectedCategory,
                     items: _serviceCategories.map<DropdownMenuItem<String>>((category) {
                       return DropdownMenuItem<String>(
                         value: category['name'],
-                        child: Text(category['name']),
+                        child: Text(category['name'], style: TextStyle(fontSize: 14.sp)),
                       );
                     }).toList(),
                     onChanged: (String? value) {
@@ -1245,34 +1306,34 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
                       });
                     },
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   TextField(
                     controller: TextEditingController(text: request['description'] ?? ''),
                     maxLines: 3,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Description',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        borderRadius: BorderRadius.all(Radius.circular(12.r)),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Row(
                     children: [
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Cancel'),
+                          child: Text('Cancel', style: TextStyle(fontSize: 14.sp)),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10.w),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Service request updated successfully'),
+                              SnackBar(
+                                content: Text('Service request updated successfully', style: TextStyle(fontSize: 14.sp)),
                                 backgroundColor: Colors.green,
                               ),
                             );
@@ -1280,7 +1341,111 @@ class _ServiceRequestsScreenState extends State<ServiceRequestsScreen> with Tick
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF006D77),
                           ),
-                          child: const Text('Save Changes'),
+                          child: Text('Save Changes', style: TextStyle(fontSize: 14.sp)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showNewRequestForm() {
+    String? selectedCategory;
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              padding: EdgeInsets.only(
+                left: 16.w,
+                right: 16.w,
+                top: 16.h,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 16.h,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'New Service Request',
+                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 16.h),
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Request Title',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.r)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      labelText: 'Category',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.r)),
+                      ),
+                    ),
+                    value: selectedCategory,
+                    items: _serviceCategories.map<DropdownMenuItem<String>>((category) {
+                      return DropdownMenuItem<String>(
+                        value: category['name'],
+                        child: Text(category['name'], style: TextStyle(fontSize: 14.sp)),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedCategory = value;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 16.h),
+                  TextField(
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: 'Description',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.r)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text('Cancel', style: TextStyle(fontSize: 14.sp)),
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Service request submitted successfully', style: TextStyle(fontSize: 14.sp)),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF006D77),
+                          ),
+                          child: Text('Submit Request', style: TextStyle(fontSize: 14.sp)),
                         ),
                       ),
                     ],

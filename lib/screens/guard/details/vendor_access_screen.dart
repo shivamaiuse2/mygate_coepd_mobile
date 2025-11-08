@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
 import 'package:mygate_coepd/theme/app_theme.dart';
@@ -197,8 +198,8 @@ class _VendorAccessScreenState extends State<VendorAccessScreen> {
                                       const SizedBox(height: 5),
                                       Text(
                                         vendor['service'],
-                                        style: const TextStyle(
-                                          fontSize: 14,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
                                           color: Colors.grey,
                                         ),
                                       ),
@@ -211,9 +212,9 @@ class _VendorAccessScreenState extends State<VendorAccessScreen> {
                                       ),
                                       const SizedBox(height: 5),
                                       Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w,
+                                          vertical: 4.h,
                                         ),
                                         decoration: BoxDecoration(
                                           color: vendor['status'] == 'approved'
@@ -221,7 +222,7 @@ class _VendorAccessScreenState extends State<VendorAccessScreen> {
                                               : vendor['status'] == 'requested'
                                                   ? Colors.orange.withValues(alpha: 0.2)
                                                   : Colors.grey.withValues(alpha: 0.2),
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(12.r),
                                         ),
                                         child: Text(
                                           vendor['status'].toString().toUpperCase(),
@@ -251,7 +252,7 @@ class _VendorAccessScreenState extends State<VendorAccessScreen> {
                                       child: const Text('Call Resident'),
                                     ),
                                   ),
-                                  const SizedBox(width: 10),
+                                  SizedBox(width: 10.w),
                                   Expanded(
                                     child: ElevatedButton(
                                       onPressed: () => _requestApproval(vendor['id']),
@@ -261,6 +262,9 @@ class _VendorAccessScreenState extends State<VendorAccessScreen> {
                                       child: const Text(
                                         'Request Approval',
                                         style: TextStyle(color: Colors.white),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),

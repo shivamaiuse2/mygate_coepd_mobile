@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
 import 'package:mygate_coepd/theme/app_theme.dart';
@@ -206,7 +207,7 @@ class _GroupVisitorEntryScreenState extends State<GroupVisitorEntryScreen> {
                             onPressed: _addVisitor,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.primary,
-                              minimumSize: const Size(double.infinity, 50),
+                              minimumSize: Size(double.infinity, 50.h),
                             ),
                             child: const Text(
                               'Add Visitor',
@@ -251,18 +252,18 @@ class _GroupVisitorEntryScreenState extends State<GroupVisitorEntryScreen> {
                       itemBuilder: (context, index) {
                         final visitor = _groupVisitors[index];
                         return Card(
-                          margin: const EdgeInsets.only(bottom: 15),
+                          margin: EdgeInsets.only(bottom: 15.h),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(15),
+                            padding: EdgeInsets.all(15.w),
                             child: Row(
                               children: [
                                 CircleAvatar(
                                   backgroundImage: CachedNetworkImageProvider(visitor['image']),
                                 ),
-                                const SizedBox(width: 15),
+                                SizedBox(width: 15.w),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,7 +275,7 @@ class _GroupVisitorEntryScreenState extends State<GroupVisitorEntryScreen> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      const SizedBox(height: 5),
+                                      SizedBox(height: 5.h),
                                       Text(
                                         '${visitor['type']} • ${visitor['flat']}',
                                         style: const TextStyle(

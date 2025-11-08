@@ -113,7 +113,7 @@ class _OfflineModeScreenState extends State<OfflineModeScreen> {
                                     _isOfflineMode = value;
                                   });
                                 },
-                                activeColor: AppTheme.primary,
+                                activeThumbColor: AppTheme.primary,
                               ),
                             ],
                           ),

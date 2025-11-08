@@ -4,7 +4,7 @@ import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
 import 'package:mygate_coepd/blocs/auth/auth_state.dart';
 import 'package:mygate_coepd/models/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:mygate_coepd/theme/app_theme.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResidentDashboardScreen extends StatefulWidget {
   const ResidentDashboardScreen({super.key});
@@ -141,17 +141,17 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _fadeAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
     );
-    
+
     // Start animations after a small delay
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _animationController.forward();
     });
-    
+
     super.initState();
   }
 
@@ -168,69 +168,54 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
       builder: (context, state) {
         if (state is Authenticated) {
           final user = state.user;
-          return Theme(
-            data: AppTheme.lightTheme,
-            child: Container(
-              child: Scaffold(
-                body: Stack(
-                  children: <Widget>[
-                    InkWell(
-                      splashColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                      },
-                      child: Column(
-                        children: <Widget>[
-                          // getAppBarUI(user),
-                          Expanded(
-                            child: NestedScrollView(
-                              controller: _scrollController,
-                              headerSliverBuilder:
-                                  (BuildContext context, bool innerBoxIsScrolled) {
-                                return <Widget>[
-                                  SliverList(
-                                    delegate: SliverChildBuilderDelegate((
-                                      BuildContext context,
-                                      int index,
-                                    ) {
-                                      return Column(
-                                        children: <Widget>[
-                                          getQuickStatsUI(),
-                                        ],
-                                      );
-                                    }, childCount: 1),
-                                  ),
-                                ];
-                              },
-                              body: Container(
-                                color: AppTheme.lightTheme.colorScheme.background,
-                                child: ListView(
-                                  children: <Widget>[
-                                    getAnnouncementsSection(),
-                                    getQuickActionsSection(),
-                                    getUpcomingEventsSection(),
-                                  ],
-                                ),
-                              ),
+          return Scaffold(
+            body: Column(
+              children: <Widget>[
+                // getAppBarUI(user),
+                Expanded(
+                  child: NestedScrollView(
+                    controller: _scrollController,
+                    headerSliverBuilder:
+                        (BuildContext context, bool innerBoxIsScrolled) {
+                          return <Widget>[
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate((
+                                BuildContext context,
+                                int index,
+                              ) {
+                                return Column(
+                                  children: <Widget>[getQuickStatsUI()],
+                                );
+                              }, childCount: 1),
                             ),
-                          ),
+                          ];
+                        },
+                    body: Container(
+                      color: Theme.of(context).colorScheme.surface,
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        children: <Widget>[
+                          getAnnouncementsSection(),
+                          getQuickActionsSection(),
+                          getUpcomingEventsSection(),
                         ],
                       ),
                     ),
-                  ],
-                ),
-                floatingActionButton: ScaleTransition(
-                  scale: _fadeAnimation,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/services');
-                    },
-                    backgroundColor: Theme.of(context).primaryColor,
-                    child: const Icon(Icons.add),
                   ),
+                ),
+              ],
+            ),
+            floatingActionButton: ScaleTransition(
+              scale: _fadeAnimation,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/services');
+                },
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Icon(
+                  Icons.add, 
+                  size: 24.sp,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
             ),
@@ -244,21 +229,23 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
   Widget getAppBarUI(User user) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.primary,
+        color: Theme.of(context).primaryColor,
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            offset: const Offset(0, 2),
-            blurRadius: 4.0,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.grey.withValues(alpha: 0.2),
+            offset: Offset(0, 2.h),
+            blurRadius: 4.w,
           ),
         ],
       ),
       child: Padding(
         padding: EdgeInsets.only(
           top: MediaQuery.of(context).padding.top,
-          left: 16,
-          right: 16,
-          bottom: 16,
+          left: 16.w,
+          right: 16.w,
+          bottom: 16.h,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -272,19 +259,19 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
                     child: Text(
                       'Welcome back',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.8),
-                        fontSize: 14,
+                        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.8),
+                        fontSize: 14.sp,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4.h),
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: Text(
                       user.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -298,11 +285,11 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
                 onPressed: () {
                   Navigator.pushNamed(context, '/announcements');
                 },
-                icon: const Icon(Icons.notifications),
-                color: Colors.white,
+                icon: Icon(Icons.notifications, size: 24.sp),
+                color: Theme.of(context).iconTheme.color,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12.w),
             FadeTransition(
               opacity: _fadeAnimation,
               child: GestureDetector(
@@ -310,6 +297,7 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
                   Navigator.pushNamed(context, '/profile');
                 },
                 child: CircleAvatar(
+                  radius: 20.r,
                   backgroundImage: user.profileImage != null
                       ? CachedNetworkImageProvider(user.profileImage!)
                       : null,
@@ -317,6 +305,7 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
                       ? Icon(
                           Icons.person,
                           color: Theme.of(context).primaryColor,
+                          size: 24.sp,
                         )
                       : null,
                 ),
@@ -329,124 +318,119 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
   }
 
   Widget getQuickStatsUI() {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              blurRadius: 6,
-              offset: const Offset(0, 4),
-            ),
-          ],
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20.r),
+          bottomRight: Radius.circular(20.r),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: _quickStats
-              .asMap()
-              .entries
-              .map((entry) {
-                final index = entry.key;
-                final stat = entry.value;
-                
-                return Expanded(
-                  child: ScaleTransition(
-                    scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: _animationController,
-                        curve: Interval(
-                          0.1 * index,
-                          0.5 + (0.1 * index),
-                          curve: Curves.elasticOut,
-                        ),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.grey.withValues(alpha: 0.2),
+            blurRadius: 6.w,
+            offset: Offset(0, 4.h),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: _quickStats.asMap().entries.map((entry) {
+          final index = entry.key;
+          final stat = entry.value;
+    
+          return Expanded(
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                CurvedAnimation(
+                  parent: _animationController,
+                  curve: Interval(
+                    0.1 * index,
+                    0.5 + (0.1 * index),
+                    curve: Curves.elasticOut,
+                  ),
+                ),
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  // Navigate to respective screens based on stat type
+                  switch (stat['label']) {
+                    case 'Visitors':
+                      Navigator.pushNamed(context, '/visitors');
+                      break;
+                    case 'Bills Due':
+                      Navigator.pushNamed(context, '/bills');
+                      break;
+                    case 'Updates':
+                      Navigator.pushNamed(context, '/announcements');
+                      break;
+                  }
+                },
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  elevation: 2,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Theme.of(context).cardTheme.color!,
+                          Theme.of(context).cardTheme.color!.withValues(alpha: 0.95),
+                        ],
                       ),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: GestureDetector(
-                      onTap: () {
-                        // Navigate to respective screens based on stat type
-                        switch (stat['label']) {
-                          case 'Visitors':
-                            Navigator.pushNamed(context, '/visitors');
-                            break;
-                          case 'Bills Due':
-                            Navigator.pushNamed(context, '/bills');
-                            break;
-                          case 'Updates':
-                            Navigator.pushNamed(context, '/announcements');
-                            break;
-                        }
-                      },
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 2,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Colors.white,
-                                Colors.white.withValues(alpha: 0.95),
-                              ],
+                    child: Padding(
+                      padding: EdgeInsets.all(12.w),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10.w),
+                            decoration: BoxDecoration(
+                              color: stat['color'].withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.1),
+                              borderRadius: BorderRadius.circular(30.r),
                             ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: stat['color'].withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: Icon(
-                                    stat['icon'] as IconData,
-                                    color: stat['color'],
-                                    size: 28,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  stat['label'] as String,
-                                  style: TextStyle(
-                                    color: stat['color'],
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${stat['value']}',
-                                  style: TextStyle(
-                                    color: stat['color'],
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                            child: Icon(
+                              stat['icon'] as IconData,
+                              color: stat['color'],
+                              size: 28.sp,
                             ),
                           ),
-                        ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            stat['label'] as String,
+                            style: TextStyle(
+                              color: stat['color'],
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            '${stat['value']}',
+                            style: TextStyle(
+                              color: stat['color'],
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                );
-              })
-              .toList(),
-        ),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -455,22 +439,28 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
     return TabBar(
       indicatorSize: TabBarIndicatorSize.tab,
       indicator: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: AppTheme.primary,
+        borderRadius: BorderRadius.circular(12.r),
+        color: Theme.of(context).primaryColor,
       ),
-      labelColor: AppTheme.onPrimary,
-      unselectedLabelColor: AppTheme.primary,
+      labelColor: Theme.of(context).colorScheme.onPrimary,
+      unselectedLabelColor: Theme.of(context).textTheme.bodyMedium?.color,
       tabs: [
         Tab(
           child: Text(
-            'Dashboard',
-            style: TextStyle(fontSize: 16),
+            'Dashboard', 
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).textTheme.bodyMedium?.color,
+            ),
           ),
         ),
         Tab(
           child: Text(
-            'Activity',
-            style: TextStyle(fontSize: 16),
+            'Activity', 
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).textTheme.bodyMedium?.color,
+            ),
           ),
         ),
       ],
@@ -479,31 +469,38 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
 
   Widget getAnnouncementsSection() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Latest Updates',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.sp, 
                   fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.titleLarge?.color,
                 ),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/announcements');
                 },
-                child: const Text('View All'),
+                child: Text(
+                  'View All', 
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
           SizedBox(
-            height: 200,
+            height: 200.h,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _announcements.length,
@@ -511,16 +508,16 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
                 final int count = _announcements.length;
                 final Animation<double> animation =
                     Tween<double>(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: _animationController,
-                    curve: Interval(
-                      (1 / count) * index,
-                      1.0,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                  ),
-                );
-                
+                      CurvedAnimation(
+                        parent: _animationController,
+                        curve: Interval(
+                          (1 / count) * index,
+                          1.0,
+                          curve: Curves.fastOutSlowIn,
+                        ),
+                      ),
+                    );
+
                 final announcement = _announcements[index];
                 return AnimatedBuilder(
                   animation: animation,
@@ -529,17 +526,20 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
                       opacity: animation.value,
                       child: Transform(
                         transform: Matrix4.translationValues(
-                            0.0, 50 * (1.0 - animation.value), 0.0),
+                          0.0,
+                          50 * (1.0 - animation.value),
+                          0.0,
+                        ),
                         child: Container(
-                          width: 280,
-                          margin: const EdgeInsets.only(right: 15),
+                          width: 280.w,
+                          margin: EdgeInsets.only(right: 15.w),
                           child: Card(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(16.r),
                             ),
                             elevation: 3,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(16.r),
                               child: Stack(
                                 children: [
                                   CachedNetworkImage(
@@ -549,63 +549,67 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
                                     height: double.infinity,
                                   ),
                                   Container(
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
                                         colors: [
                                           Colors.transparent,
-                                          Colors.black54,
+                                          Theme.of(context).brightness == Brightness.dark
+                                              ? Colors.black.withValues(alpha: 0.7)
+                                              : Colors.black.withValues(alpha: 0.5),
                                         ],
                                       ),
                                     ),
                                   ),
                                   Positioned(
-                                    top: 15,
-                                    left: 15,
+                                    top: 15.h,
+                                    left: 15.w,
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 10.w,
+                                        vertical: 5.h,
                                       ),
                                       decoration: BoxDecoration(
                                         color: announcement['tagColor'],
-                                        borderRadius:
-                                            BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(
+                                          20.r,
+                                        ),
                                       ),
                                       child: Text(
                                         announcement['tag'],
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
                                   ),
                                   Positioned(
-                                    bottom: 15,
-                                    left: 15,
-                                    right: 15,
+                                    bottom: 15.h,
+                                    left: 15.w,
+                                    right: 15.w,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           announcement['title'],
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 16,
+                                            fontSize: 16.sp,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        const SizedBox(height: 5),
+                                        SizedBox(height: 5.h),
                                         Text(
                                           announcement['date'],
                                           style: TextStyle(
-                                            color: Colors.white
-                                                .withValues(alpha: 0.8),
-                                            fontSize: 12,
+                                            color: Colors.white.withValues(
+                                              alpha: 0.8,
+                                            ),
+                                            fontSize: 12.sp,
                                           ),
                                         ),
                                       ],
@@ -630,100 +634,138 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
 
   Widget getQuickActionsSection() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Quick Actions',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18.sp, 
               fontWeight: FontWeight.bold,
+              color: Theme.of(context).textTheme.titleLarge?.color,
             ),
           ),
-          const SizedBox(height: 16),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
+          SizedBox(height: 16.h),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // Calculate optimal cross axis count based on screen width
+              final double itemWidth = 80.w; // Base width for each item
+              final int crossAxisCount = (constraints.maxWidth / itemWidth)
+                  .floor()
+                  .clamp(3, 5);
+
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 15.w,
+                  mainAxisSpacing: 15.h,
+                  childAspectRatio: 0.9,
                 ),
-            itemCount: _quickActions.length,
-            itemBuilder: (context, index) {
-              final int count = _quickActions.length;
-              final Animation<double> animation =
-                  Tween<double>(begin: 0.0, end: 1.0).animate(
-                CurvedAnimation(
-                  parent: _animationController,
-                  curve: Interval(
-                    (1 / count) * index,
-                    1.0,
-                    curve: Curves.fastOutSlowIn,
-                  ),
-                ),
-              );
-              
-              final action = _quickActions[index];
-              return AnimatedBuilder(
-                animation: animation,
-                builder: (BuildContext context, Widget? child) {
-                  return Opacity(
-                    opacity: animation.value,
-                    child: Transform(
-                      transform: Matrix4.translationValues(
-                          0.0, 30 * (1.0 - animation.value), 0.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          switch (action['screen']) {
-                            case 'visitors':
-                              Navigator.pushNamed(context, '/visitors');
-                              break;
-                            case 'services':
-                              Navigator.pushNamed(context, '/services');
-                              break;
-                            case 'bills':
-                              Navigator.pushNamed(context, '/bills');
-                              break;
-                            case 'amenities':
-                              Navigator.pushNamed(context, '/amenities');
-                              break;
-                            case 'community':
-                              Navigator.pushNamed(context, '/community');
-                              break;
-                            case 'announcements':
-                              Navigator.pushNamed(context, '/announcements');
-                              break;
-                            case 'profile':
-                              Navigator.pushNamed(context, '/profile');
-                              break;
-                          }
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                color: action['color'].withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Icon(
-                                action['icon'],
-                                color: action['color'],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              action['label'],
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ],
+                itemCount: _quickActions.length,
+                itemBuilder: (context, index) {
+                  final int count = _quickActions.length;
+                  final Animation<double> animation =
+                      Tween<double>(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: _animationController,
+                          curve: Interval(
+                            (1 / count) * index,
+                            1.0,
+                            curve: Curves.fastOutSlowIn,
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+
+                  final action = _quickActions[index];
+                  return AnimatedBuilder(
+                    animation: animation,
+                    builder: (BuildContext context, Widget? child) {
+                      return Opacity(
+                        opacity: animation.value,
+                        child: Transform(
+                          transform: Matrix4.translationValues(
+                            0.0,
+                            30 * (1.0 - animation.value),
+                            0.0,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Navigate within the ResidentMainScreen instead of pushing new screens
+                              switch (action['screen']) {
+                                case 'visitors':
+                                  // We need to access the parent ResidentMainScreen to change tabs
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/resident-main/visitors',
+                                  );
+                                  break;
+                                case 'services':
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/resident-main/services',
+                                  );
+                                  break;
+                                case 'bills':
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/resident-main/bills',
+                                  );
+                                  break;
+                                case 'amenities':
+                                  Navigator.pushNamed(context, '/amenities');
+                                  break;
+                                case 'community':
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/resident-main/community',
+                                  );
+                                  break;
+                                case 'announcements':
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/announcements',
+                                  );
+                                  break;
+                                case 'profile':
+                                  Navigator.pushNamed(context, '/profile');
+                                  break;
+                              }
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(15.w),
+                                  decoration: BoxDecoration(
+                                    color: action['color'].withValues(
+                                      alpha: Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(16.r),
+                                  ),
+                                  child: Icon(
+                                    action['icon'],
+                                    color: action['color'],
+                                    size: 24.sp,
+                                  ),
+                                ),
+                                SizedBox(height: 8.h),
+                                Text(
+                                  action['label'],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               );
@@ -736,29 +778,36 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
 
   Widget getUpcomingEventsSection() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Upcoming Events',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.sp, 
                   fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.titleLarge?.color,
                 ),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/announcements');
                 },
-                child: const Text('View All'),
+                child: Text(
+                  'View All', 
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -767,16 +816,16 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
               final int count = _upcomingEvents.length;
               final Animation<double> animation =
                   Tween<double>(begin: 0.0, end: 1.0).animate(
-                CurvedAnimation(
-                  parent: _animationController,
-                  curve: Interval(
-                    (1 / count) * index,
-                    1.0,
-                    curve: Curves.fastOutSlowIn,
-                  ),
-                ),
-              );
-              
+                    CurvedAnimation(
+                      parent: _animationController,
+                      curve: Interval(
+                        (1 / count) * index,
+                        1.0,
+                        curve: Curves.fastOutSlowIn,
+                      ),
+                    ),
+                  );
+
               final event = _upcomingEvents[index];
               return AnimatedBuilder(
                 animation: animation,
@@ -785,101 +834,104 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
                     opacity: animation.value,
                     child: Transform(
                       transform: Matrix4.translationValues(
-                          0.0, 30 * (1.0 - animation.value), 0.0),
+                        0.0,
+                        30 * (1.0 - animation.value),
+                        0.0,
+                      ),
                       child: Card(
-                        margin: const EdgeInsets.only(bottom: 15),
+                        margin: EdgeInsets.only(bottom: 15.h),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
                         child: Row(
                           children: [
-                            const SizedBox(width: 15),
+                            SizedBox(width: 15.w),
                             ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                bottomLeft: Radius.circular(16),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16.r),
+                                bottomLeft: Radius.circular(16.r),
                               ),
                               child: CachedNetworkImage(
                                 imageUrl: event['image'],
-                                width: 100,
-                                height: 100,
+                                width: 100.w,
+                                height: 100.h,
                                 fit: BoxFit.cover,
                               ),
                             ),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.all(15),
+                                padding: EdgeInsets.all(15.w),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       event['title'],
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
                                         fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).textTheme.titleMedium?.color,
                                       ),
                                     ),
-                                    const SizedBox(height: 5),
+                                    SizedBox(height: 5.h),
                                     Row(
                                       children: [
-                                        const Icon(
+                                        Icon(
                                           Icons.calendar_today,
-                                          size: 14,
-                                          color: Colors.grey,
+                                          size: 14.sp,
+                                          color: Theme.of(context).textTheme.bodySmall?.color,
                                         ),
-                                        const SizedBox(width: 5),
+                                        SizedBox(width: 5.w),
                                         Text(
                                           event['date'],
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey,
+                                          style: TextStyle(
+                                            fontSize: 12.sp,
+                                            color: Theme.of(context).textTheme.bodySmall?.color,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 10),
+                                    SizedBox(height: 10.h),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
                                           children: [
-                                            const CircleAvatar(
-                                              radius: 10,
-                                              backgroundColor:
-                                                  Colors.grey,
+                                            CircleAvatar(
+                                              radius: 10.r,
+                                              backgroundColor: Theme.of(context).brightness == Brightness.dark
+                                                  ? Colors.grey[600]
+                                                  : Colors.grey[300],
                                             ),
-                                            const SizedBox(width: 3),
-                                            const CircleAvatar(
-                                              radius: 10,
-                                              backgroundColor:
-                                                  Colors.grey,
+                                            SizedBox(width: 3.w),
+                                            CircleAvatar(
+                                              radius: 10.r,
+                                              backgroundColor: Theme.of(context).brightness == Brightness.dark
+                                                  ? Colors.grey[600]
+                                                  : Colors.grey[300],
                                             ),
-                                            const SizedBox(width: 3),
-                                            const CircleAvatar(
-                                              radius: 10,
-                                              backgroundColor:
-                                                  Colors.grey,
+                                            SizedBox(width: 3.w),
+                                            CircleAvatar(
+                                              radius: 10.r,
+                                              backgroundColor: Theme.of(context).brightness == Brightness.dark
+                                                  ? Colors.grey[600]
+                                                  : Colors.grey[300],
                                             ),
-                                            const SizedBox(width: 5),
+                                            SizedBox(width: 5.w),
                                             Container(
-                                              padding:
-                                                  const EdgeInsets.all(3),
+                                              padding: EdgeInsets.all(3.w),
                                               decoration: BoxDecoration(
                                                 color: Theme.of(
                                                   context,
                                                 ).primaryColor,
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                      10,
-                                                    ),
+                                                    BorderRadius.circular(10.r),
                                               ),
                                               child: Text(
                                                 '+${event['attendees']}',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 10,
+                                                  fontSize: 10.sp,
                                                 ),
                                               ),
                                             ),
@@ -887,7 +939,18 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
                                         ),
                                         OutlinedButton(
                                           onPressed: () {},
-                                          child: const Text('RSVP'),
+                                          style: OutlinedButton.styleFrom(
+                                            side: BorderSide(
+                                              color: Theme.of(context).primaryColor,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'RSVP',
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              color: Theme.of(context).primaryColor,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -907,31 +970,5 @@ class _ResidentDashboardScreenState extends State<ResidentDashboardScreen>
         ],
       ),
     );
-  }
-}
-
-class ContestTabHeader extends SliverPersistentHeaderDelegate {
-  ContestTabHeader(this._tabBar);
-
-  final TabBar _tabBar;
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: AppTheme.lightTheme.scaffoldBackgroundColor,
-      child: _tabBar,
-    );
-  }
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
   }
 }

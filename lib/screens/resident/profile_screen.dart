@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mygate_coepd/blocs/auth/auth_bloc.dart';
+import 'package:mygate_coepd/blocs/auth/auth_event.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -8,7 +12,8 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateMixin {
+class _ProfileScreenState extends State<ProfileScreen>
+    with TickerProviderStateMixin {
   bool _biometricEnabled = false;
   bool _notificationsEnabled = true;
   TextEditingController _searchController = TextEditingController();
@@ -34,13 +39,13 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
           'name': 'Jane Doe',
           'relationship': 'Spouse',
           'image':
-              'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100'
+              'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100',
         },
         {
           'name': 'Jimmy Doe',
           'relationship': 'Son',
           'image':
-              'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100'
+              'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100',
         },
       ],
     },
@@ -74,20 +79,22 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
     super.initState();
     // Initialize filtered family members with all members
     _filteredFamilyMembers = List<Map<String, dynamic>>.from(
-        _profileSections
-            .firstWhere((section) => section['title'] == 'Family Members')['items']);
+      _profileSections.firstWhere(
+        (section) => section['title'] == 'Family Members',
+      )['items'],
+    );
     _searchController.addListener(_filterFamilyMembers);
-    
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
     );
-    
+
     // Start animations after a small delay
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _animationController.forward();
@@ -97,14 +104,16 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
   void _filterFamilyMembers() {
     setState(() {
       String searchTerm = _searchController.text.toLowerCase();
-      
-      List<Map<String, dynamic>> allFamilyMembers = 
+
+      List<Map<String, dynamic>> allFamilyMembers =
           List<Map<String, dynamic>>.from(
-              _profileSections
-                  .firstWhere((section) => section['title'] == 'Family Members')['items']);
-      
+            _profileSections.firstWhere(
+              (section) => section['title'] == 'Family Members',
+            )['items'],
+          );
+
       _filteredFamilyMembers = allFamilyMembers.where((member) {
-        return searchTerm.isEmpty || 
+        return searchTerm.isEmpty ||
             member['name'].toLowerCase().contains(searchTerm) ||
             member['relationship'].toLowerCase().contains(searchTerm);
       }).toList();
@@ -123,26 +132,26 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
-          ScaleTransition(
-            scale: _fadeAnimation,
-            child: IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: _showSearchBar,
-            ),
-          ),
-        ],
+        title: Text('Profile', style: TextStyle(fontSize: 18.sp)),
+        // actions: [
+        //   ScaleTransition(
+        //     scale: _fadeAnimation,
+        //     child: IconButton(
+        //       icon: Icon(Icons.search, size: 24.sp),
+        //       onPressed: _showSearchBar,
+        //     ),
+        //   ),
+        // ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             // Profile Header
             _buildProfileHeader(),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
             // Profile Sections
             _buildProfileSections(),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
             // Settings
             ScaleTransition(
               scale: Tween<double>(begin: 0.9, end: 1.0).animate(
@@ -152,18 +161,18 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 ),
               ),
               child: Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(16),
+                    Padding(
+                      padding: EdgeInsets.all(16.w),
                       child: Text(
                         'Settings',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -175,21 +184,32 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                         children: [
                           ListTile(
                             leading: Container(
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10.w),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
+                                color: Theme.of(
+                                  context,
+                                ).primaryColor.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Icon(
                                 setting['icon'],
                                 color: Theme.of(context).primaryColor,
+                                size: 24.sp,
                               ),
                             ),
-                            title: Text(setting['title']),
-                            subtitle: Text(setting['subtitle']),
+                            title: Text(
+                              setting['title'],
+                              style: TextStyle(fontSize: 16.sp),
+                            ),
+                            subtitle: Text(
+                              setting['subtitle'],
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
                             trailing: index < 2
                                 ? Switch(
-                                    value: index == 0 ? _biometricEnabled : _notificationsEnabled,
+                                    value: index == 0
+                                        ? _biometricEnabled
+                                        : _notificationsEnabled,
                                     onChanged: (value) {
                                       setState(() {
                                         if (index == 0) {
@@ -199,27 +219,52 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                                         }
                                       });
                                     },
-                                    activeColor: Theme.of(context).primaryColor,
                                   )
-                                : const Icon(Icons.arrow_forward_ios, size: 16),
-                            onTap: index >= 2 ? () {} : null,
+                                : Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 16.sp,
+                                    color: Colors.grey,
+                                  ),
+                            onTap: () {
+                              if (index >= 2) {
+                                // Handle settings navigation
+                                switch (index) {
+                                  case 2:
+                                    _showPrivacyDialog();
+                                    break;
+                                  case 3:
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Language settings would open here',
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
+                                      ),
+                                    );
+                                    break;
+                                }
+                              }
+                            },
                           ),
                           if (index < _settings.length - 1)
-                            const Divider(
-                              height: 1,
-                              indent: 70,
+                            Divider(
+                              height: 1.h,
+                              thickness: 0.5,
+                              color: Colors.grey.withValues(alpha: 0.3),
+                              indent: 16.w,
+                              endIndent: 16.w,
                             ),
                         ],
                       );
-                    }).toList(),
+                    }),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
             // Logout Button
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: ScaleTransition(
                 scale: Tween<double>(begin: 0.9, end: 1.0).animate(
                   CurvedAnimation(
@@ -229,28 +274,28 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 ),
                 child: SizedBox(
                   width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      // Show logout confirmation
-                      _showLogoutConfirmation();
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.red),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: ElevatedButton(
+                    onPressed: _showLogoutConfirmation,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Logout',
                       style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 30),
+            SizedBox(height: 20.h),
           ],
         ),
       ),
@@ -259,15 +304,20 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
 
   Widget _buildProfileHeader() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withValues(alpha: 0.9),
-          ],
+        // gradient: LinearGradient(
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        //   colors: [
+        //     Theme.of(context).primaryColor,
+        //     Theme.of(context).primaryColor.withValues(alpha: 0.9),
+        //   ],
+        // ),
+        color: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20.r),
+          bottomRight: Radius.circular(20.r),
         ),
       ),
       child: Row(
@@ -283,15 +333,12 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 3,
-                    ),
+                    borderRadius: BorderRadius.circular(50.r),
+                    border: Border.all(color: Colors.white, width: 3.w),
                   ),
-                  child: const CircleAvatar(
-                    radius: 40,
-                    backgroundImage: CachedNetworkImageProvider(
+                  child: CircleAvatar(
+                    radius: 40.r,
+                    backgroundImage: const CachedNetworkImageProvider(
                       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100&h=100',
                     ),
                   ),
@@ -300,69 +347,63 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                   bottom: 0,
                   right: 0,
                   child: Container(
-                    padding: const EdgeInsets.all(4),
+                    padding: EdgeInsets.all(4.w),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.edit,
-                      size: 16,
-                      color: Color(0xFF006D77),
+                      size: 16.sp,
+                      color: const Color(0xFF006D77),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 20),
+          SizedBox(width: 20.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FadeTransition(
                   opacity: _fadeAnimation,
-                  child: const Text(
+                  child: Text(
                     'John Doe',
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: 22.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                 ),
-                const SizedBox(height: 5),
+                SizedBox(height: 5.h),
                 FadeTransition(
                   opacity: _fadeAnimation,
-                  child: const Text(
+                  child: Text(
                     'Resident • A-101',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white70,
-                    ),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.white70),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 FadeTransition(
                   opacity: _fadeAnimation,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(20.r),
                       border: Border.all(
                         color: Colors.white.withValues(alpha: 0.3),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Verified Resident',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(fontSize: 12.sp, color: Colors.white),
                     ),
                   ),
                 ),
@@ -408,10 +449,8 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
 
   Widget _buildPersonalInfoSection(List<dynamic> items) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -422,22 +461,18 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
               Theme.of(context).cardTheme.color!.withValues(alpha: 0.95),
             ],
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
           children: items.map((item) {
             return ListTile(
               title: Text(
                 item['label'],
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.sp),
               ),
               trailing: Text(
                 item['value'],
-                style: const TextStyle(
-                  color: Colors.grey,
-                ),
+                style: TextStyle(color: Colors.grey, fontSize: 14.sp),
               ),
               onTap: () {
                 _showEditInfoDialog(item['label'], item['value']);
@@ -451,12 +486,12 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
 
   Widget _buildFamilyMembersSection(List<dynamic> items) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         children: [
           Card(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
             ),
             child: Container(
               decoration: BoxDecoration(
@@ -468,21 +503,31 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                     Theme.of(context).cardTheme.color!.withValues(alpha: 0.95),
                   ],
                 ),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
               ),
               child: Column(
                 children: [
                   ...items.map((member) {
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: CachedNetworkImageProvider(member['image']),
+                        radius: 20.r,
+                        backgroundImage: CachedNetworkImageProvider(
+                          member['image'],
+                        ),
                       ),
-                      title: Text(member['name']),
-                      subtitle: Text(member['relationship']),
+                      title: Text(
+                        member['name'],
+                        style: TextStyle(fontSize: 16.sp),
+                      ),
+                      subtitle: Text(
+                        member['relationship'],
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
                       trailing: PopupMenuButton<String>(
                         icon: Icon(
                           Icons.more_vert,
                           color: Colors.grey.shade600,
+                          size: 24.sp,
                         ),
                         onSelected: (value) {
                           if (value == 'edit') {
@@ -492,35 +537,47 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                           }
                         },
                         itemBuilder: (context) => [
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'edit',
-                            child: Text('Edit'),
+                            child: Text(
+                              'Edit',
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
                           ),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'delete',
-                            child: Text('Delete'),
+                            child: Text(
+                              'Delete',
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
                           ),
                         ],
                       ),
                     );
-                  }).toList(),
+                  }),
                   Divider(
                     color: Colors.grey.withValues(alpha: 0.3),
-                    height: 1,
+                    height: 1.h,
                   ),
                   ListTile(
                     leading: Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: EdgeInsets.all(12.w),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(30),
+                        color: Theme.of(
+                          context,
+                        ).primaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(30.r),
                       ),
                       child: Icon(
                         Icons.add,
                         color: Theme.of(context).primaryColor,
+                        size: 24.sp,
                       ),
                     ),
-                    title: const Text('Add Family Member'),
+                    title: Text(
+                      'Add Family Member',
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
                     onTap: _showAddFamilyMemberDialog,
                   ),
                 ],
@@ -534,10 +591,8 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
 
   Widget _buildGenericSection(List<dynamic> items) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -548,36 +603,40 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
               Theme.of(context).cardTheme.color!.withValues(alpha: 0.95),
             ],
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
           children: items.map((item) {
             return ListTile(
               leading: Container(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(10.w),
                 decoration: BoxDecoration(
                   color: item['icon'] == Icons.fingerprint
                       ? (_biometricEnabled
-                          ? Colors.green.withValues(alpha: 0.1)
-                          : Colors.grey.withValues(alpha: 0.1))
+                            ? Colors.green.withValues(alpha: 0.1)
+                            : Colors.grey.withValues(alpha: 0.1))
                       : item['icon'] == Icons.notifications
-                          ? (_notificationsEnabled
-                              ? Colors.blue.withValues(alpha: 0.1)
-                              : Colors.grey.withValues(alpha: 0.1))
-                          : Colors.grey.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                      ? (_notificationsEnabled
+                            ? Colors.blue.withValues(alpha: 0.1)
+                            : Colors.grey.withValues(alpha: 0.1))
+                      : Colors.grey.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Icon(
                   item['icon'],
                   color: item['icon'] == Icons.fingerprint
                       ? (_biometricEnabled ? Colors.green : Colors.grey)
                       : item['icon'] == Icons.notifications
-                          ? (_notificationsEnabled ? Colors.blue : Colors.grey)
-                          : Colors.grey,
+                      ? (_notificationsEnabled ? Colors.blue : Colors.grey)
+                      : Colors.grey,
+                  size: 24.sp,
                 ),
               ),
-              title: Text(item['title']),
-              subtitle: Text(item['subtitle']),
+              title: Text(item['title'], style: TextStyle(fontSize: 16.sp)),
+              subtitle: Text(
+                item['subtitle'],
+                style: TextStyle(fontSize: 14.sp),
+              ),
               trailing: item['icon'] == Icons.fingerprint
                   ? Switch(
                       value: _biometricEnabled,
@@ -586,25 +645,25 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                           _biometricEnabled = value;
                         });
                       },
-                      activeColor: Theme.of(context).primaryColor,
+                      activeThumbColor: Theme.of(context).primaryColor,
                     )
                   : item['icon'] == Icons.notifications
-                      ? Switch(
-                          value: _notificationsEnabled,
-                          onChanged: (value) {
-                            setState(() {
-                              _notificationsEnabled = value;
-                            });
-                          },
-                          activeColor: Theme.of(context).primaryColor,
-                        )
-                      : const Icon(Icons.arrow_forward_ios, size: 16),
+                  ? Switch(
+                      value: _notificationsEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          _notificationsEnabled = value;
+                        });
+                      },
+                      activeThumbColor: Theme.of(context).primaryColor,
+                    )
+                  : Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16.sp,
+                      color: Colors.grey,
+                    ),
               onTap: () {
-                if (item['icon'] == Icons.language) {
-                  _showLanguageDialog();
-                } else if (item['icon'] == Icons.privacy_tip) {
-                  _showPrivacyDialog();
-                }
+                // Handle generic section item tap
               },
             );
           }).toList(),
@@ -614,8 +673,10 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
   }
 
   void _showEditInfoDialog(String label, String value) {
-    final TextEditingController _controller = TextEditingController(text: value);
-    
+    final TextEditingController _controller = TextEditingController(
+      text: value,
+    );
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -623,9 +684,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
           title: Text('Edit $label'),
           content: TextField(
             controller: _controller,
-            decoration: InputDecoration(
-              hintText: 'Enter $label',
-            ),
+            decoration: InputDecoration(hintText: 'Enter $label'),
           ),
           actions: [
             TextButton(
@@ -636,9 +695,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
               onPressed: () {
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('$label updated successfully'),
-                  ),
+                  SnackBar(content: Text('$label updated successfully')),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -654,8 +711,9 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
 
   void _showAddFamilyMemberDialog() {
     final TextEditingController _nameController = TextEditingController();
-    final TextEditingController _relationshipController = TextEditingController();
-    
+    final TextEditingController _relationshipController =
+        TextEditingController();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -666,16 +724,12 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
             children: [
               TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  hintText: 'Name',
-                ),
+                decoration: const InputDecoration(hintText: 'Name'),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _relationshipController,
-                decoration: const InputDecoration(
-                  hintText: 'Relationship',
-                ),
+                decoration: const InputDecoration(hintText: 'Relationship'),
               ),
             ],
           ),
@@ -712,7 +766,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
       'name': name,
       'relationship': relationship,
       'image':
-          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100'
+          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100',
     };
 
     setState(() {
@@ -728,18 +782,18 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
 
     // Show success message
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Family member added successfully'),
-      ),
+      const SnackBar(content: Text('Family member added successfully')),
     );
   }
 
   void _showEditFamilyMemberDialog(Map<String, dynamic> member) {
-    final TextEditingController _nameController =
-        TextEditingController(text: member['name']);
-    final TextEditingController _relationshipController =
-        TextEditingController(text: member['relationship']);
-    
+    final TextEditingController _nameController = TextEditingController(
+      text: member['name'],
+    );
+    final TextEditingController _relationshipController = TextEditingController(
+      text: member['relationship'],
+    );
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -750,16 +804,12 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
             children: [
               TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  hintText: 'Name',
-                ),
+                decoration: const InputDecoration(hintText: 'Name'),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _relationshipController,
-                decoration: const InputDecoration(
-                  hintText: 'Relationship',
-                ),
+                decoration: const InputDecoration(hintText: 'Relationship'),
               ),
             ],
           ),
@@ -792,7 +842,10 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
   }
 
   void _editFamilyMember(
-      Map<String, dynamic> member, String name, String relationship) {
+    Map<String, dynamic> member,
+    String name,
+    String relationship,
+  ) {
     setState(() {
       // Find and update the family member
       for (var i = 0; i < _profileSections.length; i++) {
@@ -815,9 +868,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
 
     // Show success message
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Family member updated successfully'),
-      ),
+      const SnackBar(content: Text('Family member updated successfully')),
     );
   }
 
@@ -838,9 +889,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 Navigator.of(context).pop();
                 _deleteFamilyMember(member);
               },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.red,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
               child: const Text('Delete'),
             ),
           ],
@@ -855,7 +904,8 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
       for (var i = 0; i < _profileSections.length; i++) {
         if (_profileSections[i]['title'] == 'Family Members') {
           _profileSections[i]['items'].removeWhere(
-              (item) => item['name'] == member['name']);
+            (item) => item['name'] == member['name'],
+          );
           break;
         }
       }
@@ -864,9 +914,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
 
     // Show success message
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${member['name']} deleted successfully'),
-      ),
+      SnackBar(content: Text('${member['name']} deleted successfully')),
     );
   }
 
@@ -889,9 +937,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 onTap: () {
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Language set to English'),
-                    ),
+                    const SnackBar(content: Text('Language set to English')),
                   );
                 },
               ),
@@ -905,9 +951,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                 onTap: () {
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Language set to Hindi'),
-                    ),
+                    const SnackBar(content: Text('Language set to Hindi')),
                   );
                 },
               ),
@@ -1035,19 +1079,12 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // Perform logout
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Logged out successfully'),
-                  ),
-                );
+                // Trigger logout event in AuthBloc
+                context.read<AuthBloc>().add(LogoutRequested());
                 // Navigate to login screen
                 Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
               },
-              child: const Text(
-                'Logout',
-                style: TextStyle(color: Colors.red),
-              ),
+              child: const Text('Logout', style: TextStyle(color: Colors.red)),
             ),
           ],
         );

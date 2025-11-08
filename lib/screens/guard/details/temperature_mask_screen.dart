@@ -96,7 +96,7 @@ class _TemperatureMaskScreenState extends State<TemperatureMaskScreen> {
                         _maskCompliance = value;
                       });
                     },
-                    activeColor: AppTheme.primary,
+                    activeThumbColor: AppTheme.primary,
                   ),
                 ],
               ),

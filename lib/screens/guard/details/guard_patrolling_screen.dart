@@ -240,7 +240,7 @@ class _GuardPatrollingScreenState extends State<GuardPatrollingScreen> {
                                 ),
                                 const SizedBox(height: 10),
                                 Text(
-                                  '${_currentCheckpoint}/${_checkpoints.length} checkpoints completed',
+                                  '$_currentCheckpoint/${_checkpoints.length} checkpoints completed',
                                   style: const TextStyle(
                                     color: Colors.grey,
                                   ),
